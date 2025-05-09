@@ -77,16 +77,10 @@ public:
    // Row/Col : The position class can work with row/column,
    //           which are 0..7 and 0...7
    Position(int c, int r) : colRow(0x99) { set(c, r); }
-   virtual int getCol() const
-   {
-      return isInvalid() ? -1 : (colRow >> 4) & 0x0F;
-   }
-   virtual int getRow() const
-   {
-      return isInvalid() ? -1 : colRow & 0x0F;
-   }
-   void setRow(int r) { colRow = (colRow & 0xF0) | (r & 0x0F); }
-   void setCol(int c) { colRow = (colRow & 0x0F) | ((c & 0x0F) << 4); }
+   virtual int getCol() const { return isInvalid() ? -1 : (colRow >> 4) & 0x0F;}
+   virtual int getRow() const { return isInvalid() ? -1 : colRow & 0x0F; }
+   void setRow(int r)         { colRow = (colRow & 0xF0) | (r & 0x0F); }
+   void setCol(int c)         { colRow = (colRow & 0x0F) | ((c & 0x0F) << 4); }
    void set(int c, int r)
    {
       uint8_t colRowNew;
@@ -105,10 +99,26 @@ public:
    //          such as "d4"
 
    Position(const char* s) : colRow(0x99) {}
-   const Position& operator =  (const char* rhs) { return *this; }
+   const Position& operator =  (const char* rhs) 
+   {
+      if (!rhs || strlen(rhs) != 2)
+      {
+         set(-1, -1);
+         return *this;
+      }
 
-   const Position& operator =  (const string& rhs) { return *this; }
+      char cChar = tolower(rhs[0]);
+      char rChar = rhs[1];
+      int c = ('a'<= cChar && cChar <= 'h') ? cChar - 'a' : -1;
+      int r = ('1'<= rChar && rChar <= '8') ? rChar - '1' : -1;
 
+      set(c, r);
+      return *this;
+   }
+   const Position& operator =  (const string& rhs) 
+   {
+      return operator=(rhs.c_str());
+   }
 
    // Pixels:    The Position class can work with screen coordinates,
    //            a.k.a. Pixels, these are X and Y coordinates. Note that
@@ -143,7 +153,18 @@ public:
    Position(const Position& rhs, const Delta& delta) : colRow(-1) {}
    void adjustRow(int dRow) {}
    void adjustCol(int dCol) {}
-   const Position& operator += (const Delta& rhs) { return *this; }
+   const Position& operator += (const Delta& rhs) 
+   {
+      int c = getCol() + rhs.dCol;
+      int r = getRow() + rhs.dRow;
+      
+      if (c < 0 || c >= 8 || r < 0 || r >= 8)
+         set(-1, -1);
+      else
+         set(c, r);
+
+      return *this;
+   }
    Position operator + (const Delta& rhs) const { return *this; }
 
 private:
