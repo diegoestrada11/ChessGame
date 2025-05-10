@@ -44,7 +44,7 @@ void TestMove::constructString_simple()
 {
    // SETUP
    Move move;
-   std::string input = "e5e6";
+   string input = "e5e6";
 
    // EXERCISE
    int srcCol = input[0] - 'a';  // 'e' → 4
@@ -78,7 +78,7 @@ void TestMove::read_simple()
 {
    // Setup
    Move move;
-   std::string input = "e5e6";
+   string input = "e5e6";
 
    // Excercise
    int srcCol = input[0] - 'a';  // 'e' -> 4
@@ -278,7 +278,7 @@ void TestMove::assign_capture()
 {
    // SETUP
    Move move;
-   std::string input = "e5d6r";
+   string input = "e5d6r";
 
    // EXERCISE
    int srcCol = input[0] - 'a';  // 'e' -> 4
@@ -313,7 +313,7 @@ void TestMove::assign_enpassant()
 {
    // SETUP
    Move move;
-   std::string input = "e5f6E";
+   string input = "e5f6E";
 
    // EXERCISE
    int srcCol = input[0] - 'a';  // 'e' -> 4
@@ -346,7 +346,7 @@ void TestMove::assign_castleKing()
 {
    // SETUP
    Move move;
-   std::string input = "e1g1c";
+   string input = "e1g1c";
 
    // EXERCISE
    int srcCol = input[0] - 'a';  // 'e' -> 4
@@ -379,7 +379,7 @@ void TestMove::assign_castleQueen()
 {
    // SETUP
    Move move;
-   std::string input = "e1c1C";
+   string input = "e1c1C";
 
    // EXERCISE
    int srcCol = input[0] - 'a';  // 'e' -> 4
@@ -418,7 +418,7 @@ void TestMove::getText_simple()
    move.text = "e5e6";        // directly initialize
 
    // EXERCISE
-   const std::string result = move.text;
+   const string result = move.text;
 
    // VERIFY
    assertUnit(result == "e5e6");
@@ -445,7 +445,7 @@ void TestMove::getText_capture()
    move.text = "e5e6r";              
 
    // EXERCISE
-   std::string result = move.text;  
+   string result = move.text;  
 
    // VERIFY
    assertUnit(result == "e5e6r");
@@ -472,7 +472,7 @@ void TestMove::getText_enpassant()
    move.text = "e5f6E";                 // expected output
 
    // EXERCISE
-   std::string result = move.text;      // normally generated via updateText()
+   string result = move.text;      // normally generated via updateText()
 
    // VERIFY
    assertUnit(result == "e5f6E");
@@ -497,7 +497,7 @@ void TestMove::getText_castleKing()
    move.text = "e1g1c";                  // expected output
 
    // EXERCISE
-   std::string result = move.text;       // should reflect the move text
+   string result = move.text;       // should reflect the move text
 
    // VERIFY
    assertUnit(result == "e1g1c");
@@ -522,7 +522,7 @@ void TestMove::getText_castleQueen()
    move.text = "e1c1C";                    // expected output
 
    // EXERCISE
-   std::string result = move.text;
+   string result = move.text;
 
    // VERIFY
    assertUnit(result == "e1c1C");
@@ -608,7 +608,8 @@ void TestMove::letterFromPieceType_knight()
 
    // VERIFY
    assertEquals(result, 'n');
-}
+
+}  // TEARDOWN
 
  /*************************************
   * LETTER FROM PIECE TYPE rook
@@ -625,7 +626,8 @@ void TestMove::letterFromPieceType_rook()
 
    // VERIFY
    assertEquals(result, 'r');
-}
+
+}  // TEARDOWN
 
  /*************************************
   * LETTER FROM PIECE TYPE queen
@@ -642,7 +644,8 @@ void TestMove::letterFromPieceType_queen()
 
    // VERIFY
    assertEquals(result, 'q');
-}
+   
+}  // TEARDOWN
 
  /*************************************
   * LETTER FROM PIECE TYPE king
@@ -659,7 +662,8 @@ void TestMove::letterFromPieceType_king()
 
    // VERIFY
    assertEquals(result, 'k');
-}
+
+}  // TEARDOWN
 
  /*************************************
   * PIECE TYPE FROM LETTER pawn
@@ -676,7 +680,8 @@ void TestMove::pieceTypeFromLetter_pawn()
 
    // VERIFY
    assertEquals(result, PAWN);
-}
+
+}  // TEARDOWN
 
  /*************************************
   * PIECE TYPE FROM LETTER bishop
@@ -693,7 +698,8 @@ void TestMove::pieceTypeFromLetter_bishop()
 
    // VERIFY
    assertEquals(result, BISHOP);
-}
+
+}  // TEARDOWN
 
  /*************************************
   * PIECE TYPE FROM LETTER knight
@@ -710,7 +716,8 @@ void TestMove::pieceTypeFromLetter_knight()
 
    // VERIFY
    assertEquals(result, KNIGHT);
-}
+
+}  // TEARDOWN
 
  /*************************************
   * PIECE TYPE FROM LETTER rook
