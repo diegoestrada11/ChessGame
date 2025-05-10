@@ -2,7 +2,7 @@
  * Header File:
  *    BOARD 
  * Author:
- *    <your name here>
+ *    Natalia Navarrete, Diego Estrada
  * Summary:
  *    A collection of pieces and the state of the board
  ************************************************************************/
@@ -42,9 +42,10 @@ class Board
 public:
 
    // getters
-   virtual int  getCurrentMove() const { return numMoves; }
-   virtual bool whiteTurn()      const { return (numMoves % 2== 0) ? true: false;  }
-   virtual void display(const Position& posHover, const Position& posSelect) const {}
+   virtual int  getCurrentMove()const { return numMoves; }
+   virtual bool whiteTurn()     const {return (numMoves % 2== 0) ? true: false;}
+   virtual void display(const Position& posHover, 
+                        const Position& posSelect) const {}
    virtual const Piece& operator [] (const Position& pos) const;
 
    // setters
@@ -75,10 +76,10 @@ public:
    ~BoardDummy()                                          {                }
 
    void display(const Position& posHover,
-                const Position& posSelect) const          { assert(false); }
-   void move       (const Move& move)                     { assert(false); }
-   int  getCurrentMove() const                            { assert(false); return 0; }
-   bool whiteTurn()      const                            { assert(false); return false; }
+                const Position& posSelect) const { assert(false); }
+   void move       (const Move& move)            { assert(false); }
+   int  getCurrentMove() const                   { assert(false); return 0; }
+   bool whiteTurn()      const                   { assert(false); return false;}
    Piece& operator [] (const Position& pos)
    { 
       assert(false); 

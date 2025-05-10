@@ -2,7 +2,7 @@
  * Source File:
  *    BOARD
  * Author:
- *    <your name here>
+ *    Natalia Navarrete, Diego Estrada
  * Summary:
  *    A collection of pieces and the state of the board
  ************************************************************************/
