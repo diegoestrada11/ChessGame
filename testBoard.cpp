@@ -21,9 +21,12 @@
   * VERIFY: all squares have the null pointer
   ***********************************************/
 void TestBoard::construct_dummyBoard()
-{  // SETUP
+{  
+   // SETUP
+
    // EXERCISE
    BoardDummy board;
+
    // VERIFY
    assertUnit(0 == board.numMoves);
    assertUnit(nullptr == board.board[0][0]);
@@ -90,6 +93,7 @@ void TestBoard::construct_dummyBoard()
    assertUnit(nullptr == board.board[5][7]);
    assertUnit(nullptr == board.board[6][7]);
    assertUnit(nullptr == board.board[7][7]);
+
 }  // TEARDOWN
 
  /***********************************************
@@ -98,9 +102,12 @@ void TestBoard::construct_dummyBoard()
   * VERIFY: all squares have the null pointer
   ***********************************************/
 void TestBoard::construct_emptyBoard()
-{  // SETUP
+{  
+   // SETUP
+
    // EXERCISE
    BoardEmpty board;
+
    // VERIFY
    assertUnit(0 == board.numMoves);
    assertUnit(nullptr == board.board[0][0]);
@@ -167,6 +174,7 @@ void TestBoard::construct_emptyBoard()
    assertUnit(nullptr == board.board[5][7]);
    assertUnit(nullptr == board.board[6][7]);
    assertUnit(nullptr == board.board[7][7]);
+
 }  // TEARDOWN
 
 
@@ -176,16 +184,21 @@ void TestBoard::construct_emptyBoard()
  * VERIFY: moveNumber=0
  ***********************************************/
 void TestBoard::getCurrentMove_initial()
-{  // SETUP
+
+{  
+   // SETUP
    Board board;
    createDummyBoard(board);
    board.numMoves = 0;
    int moveNumber = -1;
+
    // EXERCISE
    moveNumber = board.getCurrentMove();
+
    // VERIFY
    assertUnit(0 == board.numMoves);
    assertUnit(moveNumber == 0);
+
 }  // TEARDOWN
 
 /***********************************************
@@ -194,16 +207,20 @@ void TestBoard::getCurrentMove_initial()
  * VERIFY: moveNumber=1
  ***********************************************/
 void TestBoard::getCurrentMove_second()
-{  // SETUP
+{  
+   // SETUP
    Board board;
    createDummyBoard(board);
    board.numMoves = 1;
    int moveNumber = -1;
+
    // EXERCISE
    moveNumber = board.getCurrentMove();
+
    // VERIFY
    assertUnit(1 == board.numMoves);
    assertUnit(moveNumber == 1);
+
 }  // TEARDOWN
 
 /***********************************************
@@ -212,16 +229,20 @@ void TestBoard::getCurrentMove_second()
  * VERIFY: moveNumber=4
  ***********************************************/
 void TestBoard::getCurrentMove_middleWhite()
-{  // SETUP
+{  
+   // SETUP
    Board board;
    createDummyBoard(board);
    board.numMoves = 4;
    int moveNumber = -1;
+
    // EXERCISE
    moveNumber = board.getCurrentMove();
+
    // VERIFY
    assertUnit(4 == board.numMoves);
    assertUnit(moveNumber == 4);
+
 }  // TEARDOWN
 
 /***********************************************
@@ -230,16 +251,20 @@ void TestBoard::getCurrentMove_middleWhite()
  * VERIFY: moveNumber=5
  ***********************************************/
 void TestBoard::getCurrentMove_middleBlack()
-{  // SETUP
+{  
+   // SETUP
    Board board;
    createDummyBoard(board);
    board.numMoves = 5;
    int moveNumber = -1;
+
    // EXERCISE
    moveNumber = board.getCurrentMove();
+
    // VERIFY
    assertUnit(5 == board.numMoves);
    assertUnit(moveNumber == 5);
+
 }  // TEARDOWN
 
 /***********************************************
@@ -248,16 +273,20 @@ void TestBoard::getCurrentMove_middleBlack()
  * VERIFY: isWhiteTurn=true
  ***********************************************/
 void TestBoard::whiteTurn_initial()
-{  // SETUP
+{  
+   // SETUP
    Board board;
    board.numMoves = 0;
    createDummyBoard(board);
    bool isWhiteTurn;
+
    // EXERCISE
    isWhiteTurn = board.whiteTurn();
+
    // VERIFY
    assertUnit(0 == board.numMoves);
    assertUnit(isWhiteTurn == true);
+
 }  // TEARDOWN
 
 /***********************************************
@@ -266,16 +295,20 @@ void TestBoard::whiteTurn_initial()
  * VERIFY: isWhiteTurn=false
  ***********************************************/
 void TestBoard::whiteTurn_second()
-{  // SETUP
+{  
+   // SETUP
    Board board;
    createDummyBoard(board);
    board.numMoves = 1;
    bool isWhiteTurn;
+
    // EXERCISE
    isWhiteTurn = board.whiteTurn();
+
    // VERIFY
    assertUnit(1 == board.numMoves);
    assertUnit(isWhiteTurn == false);
+
 }  // TEARDOWN
 
 /***********************************************
@@ -284,16 +317,20 @@ void TestBoard::whiteTurn_second()
  * VERIFY: isWhiteTurn=true
  ***********************************************/
 void TestBoard::whiteTurn_middleWhite()
-{  // SETUP
+{  
+   // SETUP
    Board board;
    createDummyBoard(board);
    board.numMoves = 4;
    bool isWhiteTurn;
+
    // EXERCISE
    isWhiteTurn = board.whiteTurn();
+
    // VERIFY
    assertUnit(4 == board.numMoves);
    assertUnit(isWhiteTurn == true);
+
 }  // TEARDOWN
 
 /***********************************************
@@ -302,16 +339,20 @@ void TestBoard::whiteTurn_middleWhite()
  * VERIFY: isWhiteTurn=false
  ***********************************************/
 void TestBoard::whiteTurn_middleBlack()
-{  // SETUP
+{  
+   // SETUP
    Board board;
    createDummyBoard(board);
    board.numMoves = 5;
    bool isWhiteTurn;
+
    // EXERCISE
    isWhiteTurn = board.whiteTurn();
+
    // VERIFY
    assertUnit(5 == board.numMoves);
    assertUnit(isWhiteTurn == false);
+
 }  // TEARDOWN
 
 class Position00 : public Position
@@ -337,23 +378,28 @@ public:
  * +---a-b-c-d-e-f-g-h---+
  ***********************************************/
 void TestBoard::fetch_a1()
-{  // setup
+{  
+   // setup
    Board board;
    PieceDummy piece;
    Piece* pSave = board.board[0][0];
    board.board[0][0] = &piece;
    Position00 pos;
    Piece* p = nullptr;
+
    // exercise
    p = &(board[pos]);
+
    // verify
    assertUnit(p == &piece);
+
    // teardown 
    board.board[0][0] = pSave;
 }
 
 void TestBoard::set_a1()
-{  // setup
+{  
+   // setup
    Board board;
    PieceDummy piece;
    piece.fWhite = true;
@@ -361,11 +407,14 @@ void TestBoard::set_a1()
    board.board[0][0] = &piece;
    Position00 pos;
    Piece* p = nullptr;
+
    // exercise
    board[pos].fWhite = false;
+
    // verify
    assertUnit(piece.fWhite == false);
    assertUnit(board.board[0][0]->fWhite == false);
+
    // teardown 
    board.board[0][0] = pSave;
 }
@@ -393,23 +442,28 @@ public:
  * +---a-b-c-d-e-f-g-h---+
  ***********************************************/
 void TestBoard::fetch_h8()
-{  // setup
+{  
+   // setup
    Board board;
    PieceDummy piece;
    Piece* pSave = board.board[7][7];
    board.board[7][7] = &piece;
    Position77 pos;
    Piece* p = nullptr;
+
    // exercise
    p = &(board[pos]);
+
    // verify
    assertUnit(p == &piece);
+
    // teardown 
    board.board[7][7] = pSave;
 }
 
 void TestBoard::set_h8()
-{  // setup
+{  
+   // setup
    Board board;
    PieceDummy piece;
    piece.fWhite = true;
@@ -417,11 +471,14 @@ void TestBoard::set_h8()
    board.board[7][7] = &piece;
    Position77 pos;
    Piece* p = nullptr;
+
    // exercise
    board[pos].fWhite = false;
+
    // verify
    assertUnit(piece.fWhite == false);
    assertUnit(board.board[7][7]->fWhite == false);
+
    // teardown 
    board.board[7][7] = pSave;
 }
@@ -449,23 +506,28 @@ public:
  * +---a-b-c-d-e-f-g-h---+
  ***********************************************/
 void TestBoard::fetch_a8()
-{  // setup
+{  
+   // setup
    Board board;
    PieceDummy piece;
    Piece* pSave = board.board[0][7];
    board.board[0][7] = &piece;
    Position07 pos;
    Piece* p = nullptr;
+
    // exercise
    p = &(board[pos]);
+
    // verify
    assertUnit(p == &piece);
+
    // teardown 
    board.board[0][7] = pSave;
 }
 
 void TestBoard::set_a8()
-{  // setup
+{  
+   // setup
    Board board;
    PieceDummy piece;
    piece.fWhite = true;
@@ -473,11 +535,14 @@ void TestBoard::set_a8()
    board.board[0][7] = &piece;
    Position07 pos;
    Piece* p = nullptr;
+
    // exercise
    board[pos].fWhite = false;
+
    // verify
    assertUnit(piece.fWhite == false);
    assertUnit(board.board[0][7]->fWhite == false);
+
    // teardown 
    board.board[0][7] = pSave;
 }

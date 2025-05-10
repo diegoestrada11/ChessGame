@@ -59,6 +59,7 @@ void PositionTest::getCol_zero()
    assertUnit(pos.colRow == 0x00);
 
 }  // TEARDOWN
+
 void PositionTest::getLocation_zero()
 {
    // SETUP
