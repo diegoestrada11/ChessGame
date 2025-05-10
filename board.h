@@ -42,8 +42,8 @@ class Board
 public:
 
    // getters
-   virtual int  getCurrentMove() const { return -99;      }
-   virtual bool whiteTurn()      const { return false;  }
+   virtual int  getCurrentMove() const { return numMoves; }
+   virtual bool whiteTurn()      const { return (numMoves % 2== 0) ? true: false;  }
    virtual void display(const Position& posHover, const Position& posSelect) const {}
    virtual const Piece& operator [] (const Position& pos) const;
 
@@ -65,7 +65,13 @@ class BoardDummy : public Board
 {
    friend TestBoard; 
 public:
-   BoardDummy()                                           {                }
+   BoardDummy()  
+   { 
+      for (int c = 0; c < 8; ++c)
+         for (int r = 0; r < 8; ++r)
+            board[c][r] = nullptr;
+      numMoves = 0;
+   }
    ~BoardDummy()                                          {                }
 
    void display(const Position& posHover,

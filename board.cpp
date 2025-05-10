@@ -23,11 +23,13 @@ Space space;
 ***********************************************/
 const Piece& Board::operator [] (const Position& pos) const
 {
-   return space;
+   Piece* p = board[pos.getCol()][pos.getRow()];
+   return p ? *p : space;
 }
 Piece& Board::operator [] (const Position& pos)
 {
-   return space;
+   Piece* p = board[pos.getCol()][pos.getRow()];
+   return p ? *p : space;
 }
 
 
