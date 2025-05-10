@@ -2,7 +2,7 @@
  * Source File:
  *    TEST BOARD
  * Author:
- *    <your name here>
+ *    Natalia Navarrete, Diego Estrada
  * Summary:
  *    The unit tests for board
  ************************************************************************/

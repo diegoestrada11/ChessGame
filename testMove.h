@@ -2,7 +2,7 @@
  * Header File:
  *    TEST MOVE 
  * Author:
- *    <your name here>
+ *    Natalia Navarrete, Diego Estrada
  * Summary
  *    test the Move class
  ************************************************************************/

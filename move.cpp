@@ -2,7 +2,7 @@
  * Source File:
  *    MOVE 
  * Author:
- *    <your name here>
+ *    Natalia Navarrete, Diego Estrada
  * Summary:
  *    Everything we need to know about a single chess move
  ************************************************************************/

@@ -2,7 +2,7 @@
  * Source File:
  *    TEST POSITION
  * Author:
- *    <your name here>
+ *    Natalia Navarrete, Diego Estrada
  * Summary:
  *    The unit tests for Position
  ************************************************************************/
