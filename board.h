@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include <stack>
 #include <cassert>
 #include "move.h"   // Because we return a set of Move
 
@@ -41,45 +42,59 @@ class Board
 
 public:
 
+   // create and destroy the board
+   Board(ogstream* pgout = nullptr, bool noreset = false);
+   virtual ~Board() {}
+
    // getters
    virtual int  getCurrentMove()const { return numMoves; }
    virtual bool whiteTurn()     const {return (numMoves % 2== 0) ? true: false;}
-   virtual void display(const Position& posHover, 
-                        const Position& posSelect) const {}
+   virtual void display(const Position& posHover,
+      const Position& posSelect) const;
    virtual const Piece& operator [] (const Position& pos) const;
 
    // setters
-   virtual void move(const Move & move) { }
+   virtual void free();
+   virtual void reset(bool fFree = true);
+   virtual void move(const Move& move);
    virtual Piece& operator [] (const Position& pos);
 
 protected:
-   int numMoves;
+   void  assertBoard();
+   
    Piece * board[8][8];    // the board of chess pieces
+   int numMoves;
+
+   ogstream* pgout;        // the graphics window
 };
 
 
 /***************************************************
  * BOARD DUMMY BOARD
- * A board double that does nothing but assert. Will need this for unit tests.
+ * A board double that does nothing but assert.
  **************************************************/
 class BoardDummy : public Board
 {
    friend TestBoard; 
 public:
-   BoardDummy()  
-   { 
-      for (int c = 0; c < 8; ++c)
-         for (int r = 0; r < 8; ++r)
-            board[c][r] = nullptr;
-      numMoves = 0;
-   }
+   BoardDummy() : Board(nullptr, true /*noreset*/) {}
+   //BoardDummy()  
+   //{ 
+   //   for (int c = 0; c < 8; ++c)
+   //      for (int r = 0; r < 8; ++r)
+   //         board[c][r] = nullptr;
+   //   numMoves = 0;
+   //}
    ~BoardDummy()                                          {                }
 
    void display(const Position& posHover,
                 const Position& posSelect) const { assert(false); }
+   void reset(bool fFree = true)                 { assert(false); }
    void move       (const Move& move)            { assert(false); }
+   void undo() { assert(false); }
    int  getCurrentMove() const                   { assert(false); return 0; }
    bool whiteTurn()      const                   { assert(false); return false;}
+   void free()                                   { assert(false); }
    Piece& operator [] (const Position& pos)
    { 
       assert(false); 
@@ -103,6 +118,7 @@ class BoardEmpty : public BoardDummy
    friend TestBoard;
 public:
    Piece * pSpace;
+   int moveNumber;
 
    BoardEmpty();
    ~BoardEmpty();
@@ -114,5 +130,6 @@ public:
       else
          return *pSpace;
    }
+   int  getCurrentMove() const { return moveNumber; }
 };
 

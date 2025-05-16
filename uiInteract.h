@@ -18,11 +18,11 @@
 
 #include "position.h"
 
-/********************************************
- * INTERFACE
- * All the data necessary to keep our graphics
- * state in memory
- ********************************************/
+ /********************************************
+  * INTERFACE
+  * All the data necessary to keep our graphics
+  * state in memory
+  ********************************************/
 class Interface
 {
 public:
@@ -46,11 +46,11 @@ public:
    // Retrieve the next tick time... the time of the next draw.
    unsigned long getNextTick() { return nextTick; };
 
-   char getKey()         const { return key;     }
-   
+   char getKey()         const { return key; }
+
    void keyEvent(int key, bool fDown);
    void resetKey();
-   
+
    // How many frames per second are we configured for?
    void setFramesPerSecond(double value);
 
@@ -77,7 +77,7 @@ public:
       posSelectPrevious.setInvalid();
    }
 
-   void setHoverPosition(const Position & pos)
+   void setHoverPosition(const Position& pos)
    {
       posHover = pos;
    }
@@ -95,7 +95,7 @@ private:
    static Position  posHover;          // mouse hover position in chess coordinates
    static Position  posSelect;         // mouse clicked position in chess coordinates
    static Position  posSelectPrevious; // previous clicked position
-   
+
    static char key;                    // key pressed
 };
 

@@ -2,7 +2,7 @@
  * Source File:
  *    PIECE 
  * Author:
- *    <your name here>
+ *    Natalia Navarrete, Diego Estrada
  * Summary:
  *    The Piece base class and all the derived classes:
  *       SPACE, KING, QUEEN, ROOK, KNIGHT, BISHOP, PAWN

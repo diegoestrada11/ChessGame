@@ -2,7 +2,7 @@
  * Header File:
  *    SPACE
  * Author:
- *    <your name here> 
+ *    Natalia Navarrete, Diego Estrada
  * Summary:
  *    The space
  ************************************************************************/

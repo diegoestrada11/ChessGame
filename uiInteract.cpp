@@ -58,7 +58,7 @@ void* Interface::p = NULL;
 void (*Interface::callBack)(Interface*, void*) = NULL;
 char          Interface::key = '\0';
 
-double Position::squareWidth  = (double)SIZE_SQUARE;
+double Position::squareWidth = (double)SIZE_SQUARE;
 double Position::squareHeight = (double)SIZE_SQUARE;
 
 
@@ -107,11 +107,11 @@ void drawCallback()
    // Prepare the background buffer for drawing
    glClear(GL_COLOR_BUFFER_BIT); //clear the screen
    glColor3f((GLfloat)1.0 /* red % */, (GLfloat)1.0 /* green % */, (GLfloat)1.0 /* blue % */);
-   
+
    //calls the client's display function
    assert(ui.callBack != NULL);
    ui.callBack(&ui, ui.p);
-   
+
    //loop until the timer runs out
    if (!ui.isTimeToDraw())
       sleep((unsigned long)((ui.getNextTick() - clock()) / 1000));
@@ -156,7 +156,7 @@ void clickCallback(int button, int state, int x, int y)
 /************************************************************************
  * MOVE CALLBACK
  * When the user has clicked the mouse
- *   INPUT   x,y:      coordinates of the mouse at click, 
+ *   INPUT   x,y:      coordinates of the mouse at click,
  *                     in absolute (non-ortho) values.
  *************************************************************************/
 void moveCallback(int x, int y)
@@ -180,14 +180,14 @@ void moveCallback(int x, int y)
  *************************************************************************/
 void resizeCallback(int width, int height)
 {
-    // Even though this is a local variable, the square_width and square_height
-    // member variables are static.
-    Position pos;
-    pos.setBoardWidthHeight(width, height);
+   // Even though this is a local variable, the square_width and square_height
+   // member variables are static.
+   Position pos;
+   pos.setBoardWidthHeight(width, height);
 
-    // This tells OpenGl to use the original dimensions of the board
-    // when drawing, which is SIZE_SQUARE*10 X SIZE_SQUARE*10 
-    glViewport(0, 0, width, height);
+   // This tells OpenGl to use the original dimensions of the board
+   // when drawing, which is SIZE_SQUARE*10 X SIZE_SQUARE*10 
+   glViewport(0, 0, width, height);
 }
 
 /************************************************************************
@@ -228,7 +228,7 @@ void Interface::setNextDrawTime()
  *************************************************************************/
 void Interface::setFramesPerSecond(double value)
 {
-    timePeriod = (1.0 / value);
+   timePeriod = (1.0 / value);
 }
 
 /***************************************************************
@@ -274,7 +274,7 @@ void Interface::resetKey()
  *           argv:       The actual command-line parameters
  *           title:      The text for the titlebar of the window
  *************************************************************************/
-void Interface::initialize(const char * title)
+void Interface::initialize(const char* title)
 {
    if (initialized)
       return;
@@ -286,30 +286,30 @@ void Interface::initialize(const char * title)
    int xMax = 10 * (int)pos.getSquareWidth();
    int yMax = 10 * (int)pos.getSquareHeight();
    glutInitWindowSize(xMax, yMax); //  size ofthe window
-            
-   glutInitWindowPosition( 10, 10);                // initial position 
+
+   glutInitWindowPosition(10, 10);                // initial position 
    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);    // double buffering
    glutCreateWindow(title);                        // text on titlebar
    glutIgnoreKeyRepeat(true);
-   
+
    // set up the drawing style: B/W and 2D
-   glClearColor(0,0,0, 0);                   // Black is the background color
+   glClearColor(0, 0, 0, 0);                   // Black is the background color
    gluOrtho2D((GLdouble)0.0, (GLdouble)xMax,
-              (GLdouble)0.0, (GLdouble)yMax);
+      (GLdouble)0.0, (GLdouble)yMax);
 
    // register the callbacks so OpenGL knows how to call us
-   glutDisplayFunc(       drawCallback    );
-   glutIdleFunc(          drawCallback    );
-   glutMouseFunc(         clickCallback   );
-   glutPassiveMotionFunc( moveCallback    );
-   glutReshapeFunc(       resizeCallback  );
-   glutKeyboardFunc(      keyboardCallback);
+   glutDisplayFunc(drawCallback);
+   glutIdleFunc(drawCallback);
+   glutMouseFunc(clickCallback);
+   glutPassiveMotionFunc(moveCallback);
+   glutReshapeFunc(resizeCallback);
+   glutKeyboardFunc(keyboardCallback);
 
 #ifdef __APPLE__
-   glutWMCloseFunc(      closeCallback   );
+   glutWMCloseFunc(closeCallback);
 #endif 
    initialized = true;
-   
+
    // done
    return;
 }
@@ -325,7 +325,7 @@ void Interface::initialize(const char * title)
  *                   will need to cast this back to your own data
  *                   type before using it.
  *************************************************************************/
-void Interface::run(void (*callBack)(Interface *, void *), void *p)
+void Interface::run(void (*callBack)(Interface*, void*), void* p)
 {
    // setup the callbacks
    this->p = p;

@@ -2,7 +2,7 @@
  * Source File:
  *    KNIGHT
  * Author:
- *    <your name here>
+ *    Natalia Navarrete, Diego Estrada
  * Summary:
  *    The knight class
  ************************************************************************/

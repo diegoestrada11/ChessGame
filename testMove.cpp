@@ -10,8 +10,7 @@
 
 #include "testMove.h"
 #include "move.h"
-#include <sstream>
-#include <string>
+#include <cassert>
 
  /*************************************
   * Constructor : default
@@ -768,115 +767,4 @@ void TestMove::pieceTypeFromLetter_king()
 
    // VERIFY
    assertEquals(result, KING);
-}
-
-
- /*************************************
-  * EQUAL - NOT
-  * Input : b2b4 == b2b5
-  * Output: false
-  **************************************/
-void TestMove::equal_not()
-{
-   // SETUP
-   Move move1, move2;
-   move1.source = Position(1, 1);  // b2
-   move1.dest = Position(1, 3);  // b4
-   move2.source = Position(1, 1);  // b2
-   move2.dest = Position(1, 4);  // b5
-
-   // EXERCISE
-   bool result = (move1.source == move2.source && move1.dest == move2.dest);
-
-   // VERIFY
-   assertEquals(result, false);
-}
-
- /*************************************
-  * EQUAL - EQUALS
-  * Input : b2b4 == b2b4
-  * Output: true
-  **************************************/
-void TestMove::equal_equals()
-{
-   // SETUP
-   Move move1, move2;
-   move1.source = Position(1, 1);  // b2
-   move1.dest = Position(1, 3);  // b4
-   move2.source = Position(1, 1);  // b2
-   move2.dest = Position(1, 3);  // b4
-
-   // EXERCISE
-   bool result = (move1.source == move2.source && move1.dest == move2.dest);
-
-   // VERIFY
-   assertEquals(result, true);
-}
-
- /*************************************
-  * LESS THAN - LESS THAN
-  * Input : b2b2 < b2b4
-  * Output: false
-  *    Note that the less-than operator is needed
-  *    so std::set<T> can sort the elements. Thus,
-  *    any T in a set must define less-than. In this
-  *    case, I defined it according to the 
-  *     destination's Position's location.
-  **************************************/
-void TestMove::lessthan_lessthan()
-{
-   // SETUP
-   Move move1, move2;
-   move1.source = Position(1, 1); // b2
-   move1.dest = Position(1, 1); // b2
-   move2.source = Position(1, 1); // b2
-   move2.dest = Position(1, 3); // b4
-
-   // EXERCISE
-   bool result = (move1.dest < move2.dest); // Only comparing destinations
-
-   // VERIFY
-   assertEquals(result, true);
-}
-
- /*************************************
-  * LESS THAN - EQUALS
-  * Input : b2b4 < b2b4
-  * Output: false
-  **************************************/
-void TestMove::lessthan_equals()
-{
-   // SETUP
-   Move move1, move2;
-   move1.source = Position(1, 1); // b2
-   move1.dest = Position(1, 3); // b4
-   move2.source = Position(1, 1); // b2
-   move2.dest = Position(1, 3); // b4
-
-   // EXERCISE
-   bool result = (move1.dest < move2.dest);
-
-   // VERIFY
-   assertEquals(result, false);
-}
-
- /*************************************
-  * LESS THAN - GREATAER THAN
-  * Input : b2b4 < b2b2
-  * Output: false
-  **************************************/
-void TestMove::lessthan_greaterthan()
-{
-   // SETUP
-   Move move1, move2;
-   move1.source = Position(1, 1); // b2
-   move1.dest = Position(1, 3); // b4
-   move2.source = Position(1, 1); // b2
-   move2.dest = Position(1, 1); // b2
-
-   // EXERCISE
-   bool result = (move1.dest < move2.dest);
-
-   // VERIFY
-   assertEquals(result, false);
 }

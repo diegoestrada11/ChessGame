@@ -81,7 +81,7 @@ void ogstream::flush()
          sOut.clear();
          position.adjustRow(-1);
       }
-      // othewise append
+   // othewise append
       else
          sOut += *it;
 
@@ -104,14 +104,14 @@ void ogstream::flush()
  ************************************************************************/
 void ogstream::drawText(const Position& topLeft, const char* text) const
 {
-    void* pFont = GLUT_TEXT;
+   void* pFont = GLUT_TEXT;
 
-    // prepare to draw the text from the top-left corner
-    glRasterPos2f((GLfloat)topLeft.getX(), (GLfloat)topLeft.getY());
+   // prepare to draw the text from the top-left corner
+   glRasterPos2f((GLfloat)topLeft.getX(), (GLfloat)topLeft.getY());
 
-    // loop through the text
-    for (const char* p = text; *p; p++)
-        glutBitmapCharacter(pFont, *p);
+   // loop through the text
+   for (const char* p = text; *p; p++)
+      glutBitmapCharacter(pFont, *p);
 }
 
 /*************************************************************************
@@ -122,13 +122,13 @@ void ogstream::drawText(const Position& topLeft, const char* text) const
  ************************************************************************/
 void ogstream::drawLetter(const Position& topLeft, char letter) const
 {
-    void* pFont = GLUT_TEXT;
+   void* pFont = GLUT_TEXT;
 
-    // prepare to draw the text from the top-left corner
-    glRasterPos2f((GLfloat)topLeft.getX(), (GLfloat)topLeft.getY());
+   // prepare to draw the text from the top-left corner
+   glRasterPos2f((GLfloat)topLeft.getX(), (GLfloat)topLeft.getY());
 
-    // loop through the text
-    glutBitmapCharacter(pFont, letter);
+   // loop through the text
+   glutBitmapCharacter(pFont, letter);
 }
 
 
@@ -137,11 +137,11 @@ void ogstream::drawLetter(const Position& topLeft, char letter) const
 * Set the color on the board
 *   INPUT  rgb  RGB color in integers (0...255)
 *************************************************************************/
-void glColor(const int * rgb)
+void glColor(const int* rgb)
 {
-   glColor3f((GLfloat)(rgb[0] / 256.0), 
-             (GLfloat)(rgb[1] / 256.0),
-             (GLfloat)(rgb[2] / 256.0));
+   glColor3f((GLfloat)(rgb[0] / 256.0),
+      (GLfloat)(rgb[1] / 256.0),
+      (GLfloat)(rgb[2] / 256.0));
 }
 
 /************************************************************************
@@ -154,10 +154,10 @@ void glColor(const int * rgb)
 void ogstream::drawPiece(bool black, Rect rectangle[], int num) const
 {
    assert(position.isValid());
-   GLint x   = (GLint)((position.getCol() + 0.5) * 
-                        SIZE_SQUARE + SIZE_SQUARE);
-   GLint y   = (GLint)((position.getRow() + 0.5) *
-                        SIZE_SQUARE + SIZE_SQUARE);
+   GLint x = (GLint)((position.getCol() + 0.5) *
+      SIZE_SQUARE + SIZE_SQUARE);
+   GLint y = (GLint)((position.getRow() + 0.5) *
+      SIZE_SQUARE + SIZE_SQUARE);
 
    // get ready to draw
    glBegin(GL_QUADS);
@@ -165,7 +165,7 @@ void ogstream::drawPiece(bool black, Rect rectangle[], int num) const
 
    // iterate through the rectangles
    for (int i = 0; i < num; i++)
-   { 
+   {
       glVertex2i(x + rectangle[i].x0, y + rectangle[i].y0);
       glVertex2i(x + rectangle[i].x1, y + rectangle[i].y1);
       glVertex2i(x + rectangle[i].x2, y + rectangle[i].y2);
@@ -194,7 +194,7 @@ void ogstream::drawKing(const Position& pos, bool black)
       { 8,-4, -8,-4, -8,-5,  8,-5},    // base center
       { 8,-6, -8,-6, -8,-8,  8,-8}     // base
    };
-   
+
    position = pos;
    drawPiece(black, rectangles, 7);
 }
@@ -260,7 +260,7 @@ void ogstream::drawKnight(const Position& pos, bool black)
       {-3,6,   3,6,   6,1,   1,1},  // main
       { 6,1,   1,1,  -5,-5,  5,-5}, // body
       { 6,-6, -6,-6, -6,-8,  6,-8}  // base
-   
+
    };
 
    position = pos;
@@ -312,7 +312,7 @@ void ogstream::drawPawn(const Position& pos, bool black)
 /************************************************************************
 * DRAW BOARD
 * Draw the chess board. Note that all coordinates are in the origional
-* dimensions (SQUARE_SIZE + SQUARE_SIZE * 8 + SQUARE_SIZE), 
+* dimensions (SQUARE_SIZE + SQUARE_SIZE * 8 + SQUARE_SIZE),
 * not taking into account any scaling or resizing (non-ortho coordinates)
 ************************************************************************/
 void ogstream::drawBoard()
@@ -352,7 +352,7 @@ void ogstream::drawBoard()
    glVertex2i(outter, inner);
    glVertex2i(inner, inner);
    glEnd();
-   
+
    // draw a box around the edge
    inner = SIZE_SQUARE - 2;
    outter = SIZE_SQUARE + 8 * SIZE_SQUARE + 2;
@@ -364,30 +364,30 @@ void ogstream::drawBoard()
    glVertex2i(inner, inner);
    glEnd();
 
-   
+
    // draw the letters along the bottom and the top
    glColor(RGB_LETTERS);
-   const GLfloat WIDTH_LETTER  = 4.0;  // width of one letter
+   const GLfloat WIDTH_LETTER = 4.0;  // width of one letter
    const GLfloat HEIGHT_LETTER = 14.0; // height of one letter
-   const GLfloat TEXT_MARGIN   = 2.0;  // how close a letter can get to the edge
+   const GLfloat TEXT_MARGIN = 2.0;  // how close a letter can get to the edge
    for (int col = 0; col < 8; col++)
    {
       void* pFont = GLUT_TEXT;
 
       // Bottom row
       GLfloat xPos = (GLfloat)SIZE_SQUARE +          // indent by the board margin
-                     (GLfloat)(col * SIZE_SQUARE) +  // tab over by the number of columns
-                     (GLfloat)(SIZE_SQUARE / 2) +    // center on the column
-                     -WIDTH_LETTER;                  // back up by the width of a letter
+         (GLfloat)(col * SIZE_SQUARE) +  // tab over by the number of columns
+         (GLfloat)(SIZE_SQUARE / 2) +    // center on the column
+         -WIDTH_LETTER;                  // back up by the width of a letter
       GLfloat yPos = TEXT_MARGIN;                    // just a bit from the bottom
       glRasterPos2f(xPos, yPos);
       glutBitmapCharacter(pFont, (char)('a' + col));
 
       // top row
       yPos = (GLfloat)(SIZE_SQUARE * 2) +            // add the margins and...
-             (GLfloat)(8 * SIZE_SQUARE) +            // add the size of the squares
-             -HEIGHT_LETTER +                        // subtract the size of a letter
-             -TEXT_MARGIN;                           // just a bit from the bottom
+         (GLfloat)(8 * SIZE_SQUARE) +            // add the size of the squares
+         -HEIGHT_LETTER +                        // subtract the size of a letter
+         -TEXT_MARGIN;                           // just a bit from the bottom
       glRasterPos2f(xPos, yPos);
       glutBitmapCharacter(pFont, (char)('a' + col));
    }
@@ -396,21 +396,21 @@ void ogstream::drawBoard()
    for (int row = 0; row < 8; row++)
    {
       void* pFont = GLUT_TEXT;
-      
+
       // left column
       GLfloat xPos = TEXT_MARGIN;                    // just a bit from the side
       GLfloat yPos = (GLfloat)SIZE_SQUARE +          // indent by the board margin
-                     (GLfloat)(row * SIZE_SQUARE) +  // tab over by the number of rows
-                     (GLfloat)(SIZE_SQUARE / 2) +    // center on the row
-                     -HEIGHT_LETTER/2;               // back up by the height of a letter
+         (GLfloat)(row * SIZE_SQUARE) +  // tab over by the number of rows
+         (GLfloat)(SIZE_SQUARE / 2) +    // center on the row
+         -HEIGHT_LETTER / 2;               // back up by the height of a letter
       glRasterPos2f(xPos, yPos);
       glutBitmapCharacter(pFont, (char)('1' + row));
-      
+
       // right column
       xPos = (GLfloat)(SIZE_SQUARE * 2) +            // add the margins and...
-             (GLfloat)(8 * SIZE_SQUARE) +            // add the size of the squares
-             -HEIGHT_LETTER +                        // subtract the size of a letter
-             -TEXT_MARGIN;                           // just a bit from the bottom
+         (GLfloat)(8 * SIZE_SQUARE) +            // add the size of the squares
+         -HEIGHT_LETTER +                        // subtract the size of a letter
+         -TEXT_MARGIN;                           // just a bit from the bottom
       glRasterPos2f(xPos, yPos);
       glutBitmapCharacter(pFont, (char)('1' + row));
    }
@@ -438,13 +438,13 @@ void ogstream::drawSelected(const Position& pos)
 
    // draw the square
    glVertex2i((GLint)((col + 0) * SIZE_SQUARE + 3 + SIZE_SQUARE),
-              (GLint)((row + 0) * SIZE_SQUARE + 3 + SIZE_SQUARE));
+      (GLint)((row + 0) * SIZE_SQUARE + 3 + SIZE_SQUARE));
    glVertex2i((GLint)((col + 1) * SIZE_SQUARE - 3 + SIZE_SQUARE),
-              (GLint)((row + 0) * SIZE_SQUARE + 3 + SIZE_SQUARE));
+      (GLint)((row + 0) * SIZE_SQUARE + 3 + SIZE_SQUARE));
    glVertex2i((GLint)((col + 1) * SIZE_SQUARE - 3 + SIZE_SQUARE),
-              (GLint)((row + 1) * SIZE_SQUARE - 3 + SIZE_SQUARE));
+      (GLint)((row + 1) * SIZE_SQUARE - 3 + SIZE_SQUARE));
    glVertex2i((GLint)((col + 0) * SIZE_SQUARE + 3 + SIZE_SQUARE),
-              (GLint)((row + 1) * SIZE_SQUARE - 3 + SIZE_SQUARE));
+      (GLint)((row + 1) * SIZE_SQUARE - 3 + SIZE_SQUARE));
 
    // indicate we are finished
    glEnd();
@@ -472,13 +472,13 @@ void ogstream::drawHover(const Position& pos)
 
    // draw the square
    glVertex2i((GLint)((col + 0) * SIZE_SQUARE + SIZE_SQUARE),
-              (GLint)((row + 0) * SIZE_SQUARE + SIZE_SQUARE));
+      (GLint)((row + 0) * SIZE_SQUARE + SIZE_SQUARE));
    glVertex2i((GLint)((col + 1) * SIZE_SQUARE + SIZE_SQUARE),
-              (GLint)((row + 0) * SIZE_SQUARE + SIZE_SQUARE));
+      (GLint)((row + 0) * SIZE_SQUARE + SIZE_SQUARE));
    glVertex2i((GLint)((col + 1) * SIZE_SQUARE + SIZE_SQUARE),
-              (GLint)((row + 1) * SIZE_SQUARE + SIZE_SQUARE));
+      (GLint)((row + 1) * SIZE_SQUARE + SIZE_SQUARE));
    glVertex2i((GLint)((col + 0) * SIZE_SQUARE + SIZE_SQUARE),
-              (GLint)((row + 1) * SIZE_SQUARE + SIZE_SQUARE));
+      (GLint)((row + 1) * SIZE_SQUARE + SIZE_SQUARE));
 
    // set the checker-board color
    if ((row + col) % 2 == 0)
@@ -488,13 +488,13 @@ void ogstream::drawHover(const Position& pos)
 
    // draw the square
    glVertex2i((GLint)((col + 0) * SIZE_SQUARE + 2 + SIZE_SQUARE),
-              (GLint)((row + 0) * SIZE_SQUARE + 2 + SIZE_SQUARE));
+      (GLint)((row + 0) * SIZE_SQUARE + 2 + SIZE_SQUARE));
    glVertex2i((GLint)((col + 1) * SIZE_SQUARE - 2 + SIZE_SQUARE),
-              (GLint)((row + 0) * SIZE_SQUARE + 2 + SIZE_SQUARE));
+      (GLint)((row + 0) * SIZE_SQUARE + 2 + SIZE_SQUARE));
    glVertex2i((GLint)((col + 1) * SIZE_SQUARE - 2 + SIZE_SQUARE),
-              (GLint)((row + 1) * SIZE_SQUARE - 2 + SIZE_SQUARE));
+      (GLint)((row + 1) * SIZE_SQUARE - 2 + SIZE_SQUARE));
    glVertex2i((GLint)((col + 0) * SIZE_SQUARE + 2 + SIZE_SQUARE),
-              (GLint)((row + 1) * SIZE_SQUARE - 2 + SIZE_SQUARE));
+      (GLint)((row + 1) * SIZE_SQUARE - 2 + SIZE_SQUARE));
 
 
    // finish the drawing
@@ -522,13 +522,13 @@ void ogstream::drawPossible(const Position& pos)
 
    // draw the square
    glVertex2i((GLint)((col + 0) * SIZE_SQUARE + 7 + SIZE_SQUARE),
-              (GLint)((row + 0) * SIZE_SQUARE + 7 + SIZE_SQUARE));
+      (GLint)((row + 0) * SIZE_SQUARE + 7 + SIZE_SQUARE));
    glVertex2i((GLint)((col + 1) * SIZE_SQUARE - 7 + SIZE_SQUARE),
-              (GLint)((row + 0) * SIZE_SQUARE + 7 + SIZE_SQUARE));
+      (GLint)((row + 0) * SIZE_SQUARE + 7 + SIZE_SQUARE));
    glVertex2i((GLint)((col + 1) * SIZE_SQUARE - 7 + SIZE_SQUARE),
-              (GLint)((row + 1) * SIZE_SQUARE - 7 + SIZE_SQUARE));
+      (GLint)((row + 1) * SIZE_SQUARE - 7 + SIZE_SQUARE));
    glVertex2i((GLint)((col + 0) * SIZE_SQUARE + 7 + SIZE_SQUARE),
-              (GLint)((row + 1) * SIZE_SQUARE - 7 + SIZE_SQUARE));
+      (GLint)((row + 1) * SIZE_SQUARE - 7 + SIZE_SQUARE));
 
    // finish the drawing
    glEnd();

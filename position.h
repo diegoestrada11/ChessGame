@@ -16,6 +16,7 @@ using std::ostream;
 using std::istream;
 
 const int SIZE_SQUARE = 32;   // number of pixels in a square by default
+const int OFFSET_BOARD = 50;   // boarder between the board and the edge of screen
 
 /***********************************************
  * DELTA
@@ -34,6 +35,8 @@ const Delta SUB_C = { 0, -1 };
 
 
 class PositionTest;
+class TestKnight;
+class TestBoard;
 
 /***************************************************
  * POSITION
@@ -42,6 +45,8 @@ class PositionTest;
 class Position
 {
    friend class PositionTest;
+   friend class TestKnight;
+   friend class TestBoard;
 public:
 
    // Position :    The Position class can work with other positions,
@@ -108,7 +113,6 @@ public:
    void adjustRow(int dRow) {}
    void adjustCol(int dCol) {}
    const Position& operator += (const Delta& rhs);
-
    Position operator + (const Delta& rhs) const { return *this; }
 
 private:

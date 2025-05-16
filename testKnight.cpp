@@ -2,7 +2,7 @@
  * Source File:
  *    TEST KNIGHT
  * Author:
- *    <your name here>
+ *    Natalia Navarrete, Diego Estrada
  * Summary:
  *    The unit tests for the knight
  ************************************************************************/
@@ -12,6 +12,8 @@
 #include "board.h"
 #include "uiDraw.h"
 #include <cassert>      
+
+
 
  /*************************************
   * +---a-b-c-d-e-f-g-h---+
@@ -55,7 +57,7 @@ void TestKnight::getMoves_end()
    // VERIFY
    assertUnit(moves.size() == 2);  // many possible moves
    assertUnit(moves.find(g1e2p) != moves.end());
-   assertUnit(moves.find(g1h3 ) != moves.end());
+   assertUnit(moves.find(g1h3) != moves.end());
 
    // TEARDOWN
    board.board[6][0] = nullptr; // white knight

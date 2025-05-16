@@ -16,6 +16,7 @@
 
 class TestMove;
 class TestBoard;
+class TestKnight;
 
 /***************************************************
  * MOVE
@@ -28,9 +29,16 @@ public:
 
    friend TestMove;
    friend TestBoard;
+   friend TestKnight;
 
    // constructor
    Move();
+   Move(const string& rhs) {}
+   bool operator<(const Move& rhs) const { return true; }
+   bool operator==(const Move& rhs) const { return true; }
+   void read(const string& rhs) {}
+   string getText() const { return std::string(""); }
+
 
 
 private:
