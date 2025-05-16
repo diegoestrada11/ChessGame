@@ -1,2 +1,18 @@
-# Visual Studio user files and caches
+# Visual Studio build outputs
+Debug*/
+Release*/
+x64/Debug/
+x64/Release/
+
+# Build intermediates
+*.obj
+*.exe
+*.dll
+*.pdb
+*.ilk
+*.log
+*.tlog
+
+# VS user and cache folders
 .vs/
+
