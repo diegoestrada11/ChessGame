@@ -148,6 +148,7 @@
     <ClInclude Include="testBoard.h" />
     <ClInclude Include="testMove.h" />
     <ClInclude Include="testPosition.h" />
+    <ClInclude Include="uiDraw.h" />
     <ClInclude Include="unitTest.h" />
   </ItemGroup>
   <ItemGroup>
