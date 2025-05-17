@@ -90,7 +90,7 @@ void Board::free()
  * BOARD : ASSERT BOARD
  *         Verify the board is well-formed
  *********************************************/
-void Board::assertBoard()
+void Board::assertBoard() const
 {
 
 }
@@ -111,10 +111,7 @@ void Board::move(const Move& move)
  * It does not even have spaces though each non-filled
  * spot will report it has a space. This is for unit testing
  *********************************************/
-BoardEmpty::BoardEmpty() : BoardDummy(), pSpace(nullptr)
-{
-   pSpace = new Space(0,0);
-}
+BoardEmpty::BoardEmpty() : BoardDummy(), pSpace(new Space(0,0)), moveNumber(0){}
 BoardEmpty::~BoardEmpty() 
 {
    delete pSpace;

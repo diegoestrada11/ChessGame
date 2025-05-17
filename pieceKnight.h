@@ -20,11 +20,11 @@ class Knight : public Piece
 public:
    Knight(int c, int r, bool isWhite)
       : Piece(c, r, isWhite) {
-   }   // call base constructor properly
+   }   
 
    ~Knight() {}
 
-   PieceType getType() const override { return KNIGHT; }  // KNIGHT must be defined in PieceType enum
-   void getMoves(std::set<Move>& moves, const Board& board) const;
+   PieceType getType() const override { return KNIGHT; }
+   void getMoves(set<Move>& moves, const Board& board) const override;
    void display(ogstream* pgout) const override;
 };

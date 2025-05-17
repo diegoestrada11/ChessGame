@@ -10,6 +10,7 @@
 #pragma once
 
 #include <string>
+#include <set>
 #include "position.h"  // Every move has two Positions as attributes
 #include "pieceType.h" // A piece type
 
@@ -33,38 +34,47 @@ public:
 
    // constructor
    Move();
-   Move(const string& rhs) {}
-   bool operator<(const Move& rhs) const { return true; }
-   bool operator==(const Move& rhs) const { return true; }
-   void read(const string& rhs) {}
-   string getText() const { return std::string(""); }
+   Move(const Position& from, const Position& to, PieceType capture = SPACE,
+      MoveType mt = MOVE, bool whiteToMove = true);
 
+   explicit Move(const string& notation);
 
+   Position getSource()   const { return source; }
+   Position getDest()     const { return dest; }
+   PieceType getCapture()  const { return capture; }
+   Move::MoveType getMoveType() const { return moveType; }
+   bool isWhiteMove() const { return isWhite; }
+   string getText()     const { return text; }
+   bool operator<(const Move& rhs) const;
+   bool operator==(const Move& rhs) const;
+   void read(const string& rhs);
 
 private:
-   char letterFromPieceType(PieceType pt)     const {
+   char letterFromPieceType(PieceType pt) const 
+   {
       switch (pt)
       {
-      case PAWN:   return 'p';
-      case BISHOP: return 'b';
-      case KNIGHT: return 'n';
-      case ROOK:   return 'r';
-      case QUEEN:  return 'q';
-      case KING:   return 'k';
-      default:     return '?'; 
+         case PAWN:   return 'p';
+         case BISHOP: return 'b';
+         case KNIGHT: return 'n';
+         case ROOK:   return 'r';
+         case QUEEN:  return 'q';
+         case KING:   return 'k';
+         default:     return '?'; 
       }
    }
 
-   PieceType pieceTypeFromLetter(char letter) const {
+   PieceType pieceTypeFromLetter(char letter) const 
+   {
       switch (letter)
       {
-      case 'p': return PAWN;
-      case 'n': return KNIGHT;
-      case 'b': return BISHOP;
-      case 'r': return ROOK;
-      case 'q': return QUEEN;
-      case 'k': return KING;
-      default:  return SPACE;
+         case 'p': return PAWN;
+         case 'n': return KNIGHT;
+         case 'b': return BISHOP;
+         case 'r': return ROOK;
+         case 'q': return QUEEN;
+         case 'k': return KING;
+         default:  return SPACE;
       }
    }
 

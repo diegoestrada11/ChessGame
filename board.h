@@ -48,7 +48,7 @@ public:
 
    // getters
    virtual int  getCurrentMove()const { return numMoves; }
-   virtual bool whiteTurn()     const {return (numMoves % 2== 0) ? true: false;}
+   virtual bool whiteTurn()     const { return (numMoves % 2 == 0);  }
    virtual void display(const Position& posHover,
       const Position& posSelect) const;
    virtual const Piece& operator [] (const Position& pos) const;
@@ -60,7 +60,7 @@ public:
    virtual Piece& operator [] (const Position& pos);
 
 protected:
-   void  assertBoard();
+   void  assertBoard() const;
    
    Piece * board[8][8];    // the board of chess pieces
    int numMoves;
@@ -77,14 +77,13 @@ class BoardDummy : public Board
 {
    friend TestBoard; 
 public:
-   BoardDummy() : Board(nullptr, true /*noreset*/) {}
-   //BoardDummy()  
-   //{ 
-   //   for (int c = 0; c < 8; ++c)
-   //      for (int r = 0; r < 8; ++r)
-   //         board[c][r] = nullptr;
-   //   numMoves = 0;
-   //}
+   BoardDummy() : Board(nullptr, true) 
+   {
+      for (int c = 0; c < 8; ++c)
+         for (int r = 0; r < 8; ++r)
+            board[c][r] = nullptr;
+      numMoves = 0;
+   }
    ~BoardDummy()                                          {                }
 
    void display(const Position& posHover,
@@ -117,19 +116,18 @@ class BoardEmpty : public BoardDummy
 {
    friend TestBoard;
 public:
-   Piece * pSpace;
-   int moveNumber;
-
    BoardEmpty();
-   ~BoardEmpty();
-   const Piece& operator [] (const Position& pos) const
+   virtual ~BoardEmpty();
+   const Piece& operator [] (const Position& pos) const override
    {
       assert(pos.isValid());
-      if (board[pos.getCol()][pos.getRow()])
-         return *(board[pos.getCol()][pos.getRow()]);
-      else
-         return *pSpace;
+      Piece* p = board[pos.getCol()][pos.getRow()];
+      return p ? *p : *pSpace;
    }
-   int  getCurrentMove() const { return moveNumber; }
+   int  getCurrentMove() const override { return moveNumber; }
+private:
+   Piece* pSpace;
+   int moveNumber;
+
 };
 
