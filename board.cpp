@@ -166,9 +166,13 @@ void Board::move(const Move& move)
    if (!p)
       return;   
 
-   // only delete when capture != SPACE
+   // only delete a captured piece if it is *not* a PieceSpy
    if (move.getCapture() != SPACE)
-      delete board[dc][dr];
+   {
+      // if this is not a spy, delete it; spies should stay alive
+      if (dynamic_cast<PieceSpy*>(board[dc][dr]) == nullptr)
+         delete board[dc][dr];
+   }
 
    board[dc][dr] = p;
 
