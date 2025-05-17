@@ -48,7 +48,7 @@ void TestKnight::getMoves_end()
    g1e2p.capture = PAWN;
    Move g1h3;
    g1h3.source.colRow = 0x60;
-   g1h3.dest.colRow = 0x52;
+   g1h3.dest.colRow = 0x72;
    g1h3.capture = SPACE;
 
    // EXERCISE
@@ -173,45 +173,35 @@ void TestKnight::getMoves_capture()
    set<Move> moves;
 
    // EXPECTED MOVES (captures)
-   Move capture1;
-   capture1.source.colRow = 0x34;  // knight pos
-   capture1.dest.colRow = 0x13;    // c7
-   capture1.capture = PAWN;
+   Move capture1(
+      Position(3, 4),    // source d5 = 0x34
+      Position(1, 3),    // dest   c7 = 0x13
+      PAWN,             // what we capture
+      Move::MOVE,       // moveType (there is no CAPTURE enum)
+      /*whiteToMove=*/false  // black knight
+   );
 
-   Move capture2;
-   capture2.source.colRow = 0x34;
-   capture2.dest.colRow = 0x15;    // e7
-   capture2.capture = PAWN;
+   Move capture2(
+      Position(3, 4),      // source d5 = col=3,row=4
+      Position(4, 6),      // dest   e7 = col=4,row=6
+      PAWN,               // captured piece
+      Move::MOVE,         // move?type
+      /*whiteToMove=*/false // knight was set fWhite=false
+   );
 
-   Move capture3;
-   capture3.source.colRow = 0x34;
-   capture3.dest.colRow = 0x22;    // b6
-   capture3.capture = PAWN;
+   // b6
+   Move capture3({ 3,4 }, { 1,5 }, PAWN, Move::MOVE, false);
+   // f6
+   Move capture4({ 3,4 }, { 5,5 }, PAWN, Move::MOVE, false);
+   // b4
+   Move capture5({ 3,4 }, { 1,3 }, PAWN, Move::MOVE, false);
+   // f4
+   Move capture6({ 3,4 }, { 5,3 }, PAWN, Move::MOVE, false);
+   // c3
+   Move capture7({ 3,4 }, { 2,2 }, PAWN, Move::MOVE, false);
+   // e3
+   Move capture8({ 3,4 }, { 4,2 }, PAWN, Move::MOVE, false);
 
-   Move capture4;
-   capture4.source.colRow = 0x34;
-   capture4.dest.colRow = 0x26;    // f6
-   capture4.capture = PAWN;
-
-   Move capture5;
-   capture5.source.colRow = 0x34;
-   capture5.dest.colRow = 0x42;    // b4
-   capture5.capture = PAWN;
-
-   Move capture6;
-   capture6.source.colRow = 0x34;
-   capture6.dest.colRow = 0x46;    // f4
-   capture6.capture = PAWN;
-
-   Move capture7;
-   capture7.source.colRow = 0x34;
-   capture7.dest.colRow = 0x53;    // c3
-   capture7.capture = PAWN;
-
-   Move capture8;
-   capture8.source.colRow = 0x34;
-   capture8.dest.colRow = 0x55;    // e3
-   capture8.capture = PAWN;
 
    // EXERCISE
    knight.getMoves(moves, board);
