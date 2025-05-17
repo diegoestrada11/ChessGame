@@ -25,6 +25,12 @@ static const Delta KNIGHT_OFFSETS[8] =
  ***************************************************/
 void Knight::display(ogstream* pgout) const
 {
+   if (!pgout)
+      return;
+
+   if (!position.isValid())
+      return;
+
    pgout->drawKnight(position, isWhite());
 
 }
