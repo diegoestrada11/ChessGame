@@ -39,22 +39,25 @@ void Knight::getMoves(set <Move>& moves, const Board& board) const
 
    for (const Delta& d : KNIGHT_OFFSETS)
    {
-      int c = src.getCol() + d.dCol;
-      int r = src.getRow() + d.dRow;
-      Position dst(c, r);
+      Position dst = src;   
+      dst += d;             
+
       if (!dst.isValid())
          continue;
 
       const Piece& occ = board[dst];
       PieceType pt = occ.getType();
+      bool      same = (occ.isWhite() == this->isWhite());
+      bool      enemy = (pt != SPACE && !same);
 
       if (pt == SPACE)
       {
          moves.insert(Move(src, dst, SPACE, Move::MOVE, isWhite()));
       }
-      else if (occ.isWhite() != this->isWhite())
+      else if (enemy)
       {
          moves.insert(Move(src, dst, pt, Move::MOVE, isWhite()));
       }
+      // no special “BoardEmpty” case needed any more
    }
 }
