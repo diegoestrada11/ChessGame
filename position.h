@@ -51,7 +51,7 @@ public:
 
    // Position :    The Position class can work with other positions,
    //               Allowing for comparisions, copying, etc.
-   Position(const Position& rhs) { colRow = 0x00; }
+   Position(const Position& rhs) : colRow(rhs.colRow){}
    Position() : colRow(0x99) {}
    bool isInvalid() const { return !isValid(); }
    bool isValid()   const;

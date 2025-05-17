@@ -1,4 +1,4 @@
-/***********************************************************************
+﻿/***********************************************************************
  * Source File:
  *    KNIGHT
  * Author:
@@ -29,35 +29,44 @@ void Knight::display(ogstream* pgout) const
 
 }
 
-
 /**********************************************
- * KNIGHT : GET POSITIONS
+ * KNIGHT : GET MOVES
+ * Generate all legal L‑shaped moves for this knight.
  *********************************************/
-void Knight::getMoves(set <Move>& moves, const Board& board) const
+void Knight::getMoves(std::set<Move>& moves, const Board& board) const
 {
    Position src = position;
 
+   // All eight L‑shaped offsets
+   static const Delta KNIGHT_OFFSETS[8] = {
+      {+1,+2}, {+2,+1}, {+2,-1}, {+1,-2},
+      {-1,-2}, {-2,-1}, {-2,+1}, {-1,+2}
+   };
+
    for (const Delta& d : KNIGHT_OFFSETS)
    {
-      Position dst = src;   
-      dst += d;             
+      Position dst(src);
+      dst += d;                   // apply offset
 
-      if (!dst.isValid())
+      if (!dst.isValid())         // off‑board?
          continue;
 
       const Piece& occ = board[dst];
       PieceType pt = occ.getType();
-      bool      same = (occ.isWhite() == this->isWhite());
-      bool      enemy = (pt != SPACE && !same);
+      bool      friendly = (occ.isWhite() == this->isWhite());
 
       if (pt == SPACE)
       {
+         // empty square → normal quiet move
          moves.insert(Move(src, dst, SPACE, Move::MOVE, isWhite()));
       }
-      else if (enemy)
+      else if (!friendly)
       {
+         // occupied by enemy → capture move
          moves.insert(Move(src, dst, pt, Move::MOVE, isWhite()));
       }
-      // no special �BoardEmpty� case needed any more
+      // same‑color on a real Board → skip
+      // (BoardEmpty returns SPACE for nullptr, so we never see SPACE here for enemy)
    }
 }
+
