@@ -64,12 +64,12 @@ void Knight::getMoves(std::set<Move>& moves, const Board& board) const
       if (pt == SPACE)
       {
          // empty square → normal quiet move
-         moves.insert(Move(src, dst, SPACE, Move::MOVE, isWhite()));
+         moves.insert(Move(src, dst, SPACE, Move::MOVE, true));
       }
       else if (!friendly)
       {
          // occupied by enemy → capture move
-         moves.insert(Move(src, dst, pt, Move::MOVE, isWhite()));
+         moves.insert(Move(src, dst, pt, Move::MOVE, true));
       }
       // same‑color on a real Board → skip
       // (BoardEmpty returns SPACE for nullptr, so we never see SPACE here for enemy)
