@@ -17,13 +17,13 @@
 
  /*************************************
   * ASSIGNMENT
-  * input: lhs.fWhite=false .lastMove=6 .nMoves=2 
+  * input: lhs.fWhite=false .lastMove=6 .nMoves=2
   *        rhs.fWhite=true  .lastMove=3 .nMoves=1
   * output:lhs.fWhite=true  .lastMove=3 .nMoves=1
   **************************************/
 void TestPiece::assignment()
 {  // setup
-   PieceDerived lhs(0,0,true);
+   PieceDerived lhs(0, 0, true);
    lhs.fWhite = false;
    lhs.lastMove = 6;
    lhs.nMoves = 2;
@@ -282,12 +282,12 @@ void TestPiece::getPosition()
    piece.fWhite = false;
    piece.lastMove = 1;
    piece.nMoves = 2;
-   piece.position = Position(2,3);
+   piece.position = Position(2, 3);
    Position pos;
    // exercise
    pos = piece.getPosition();
    // verify
-   assertUnit(pos == Position(2,3));
+   assertUnit(pos == Position(2, 3));
    assertUnit(piece.fWhite == false);
    assertUnit(piece.lastMove == 1);
    assertUnit(piece.nMoves == 2);

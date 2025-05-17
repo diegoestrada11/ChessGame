@@ -21,10 +21,7 @@ class Space : public Piece
 {
    friend TestSpace;
 public:
-   Space(int c, int r)
-      : Piece(Position(c, r), false)
-   {
-   }
+   Space(int c, int r) : Piece(Position(c, r), false){}
    ~Space() {}
    PieceType getType() const override { return SPACE; }
    void display(ogstream* pgout) const override {}
