@@ -68,7 +68,6 @@ void Board::display(const Position& posHover, const Position& posSelect) const
 
 }
 
-
 /************************************************
  * BOARD : CONSTRUCT
  *         Free up all the allocated memory
@@ -77,7 +76,6 @@ Board::Board(ogstream* pgout, bool noreset) : pgout(pgout), numMoves(0)
 {
 
 }
-
 
 /************************************************
  * BOARD : FREE
@@ -88,7 +86,6 @@ void Board::free()
 
 }
 
-
 /**********************************************
  * BOARD : ASSERT BOARD
  *         Verify the board is well-formed
@@ -97,9 +94,6 @@ void Board::assertBoard()
 {
 
 }
-
-
-
 
 /**********************************************
  * BOARD : MOVE

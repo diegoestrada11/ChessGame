@@ -1,4 +1,4 @@
-/***********************************************************************
+﻿/***********************************************************************
  * Header File:
  *    SPACE
  * Author:
@@ -13,16 +13,20 @@
 
 class TestSpace;
 
- /***************************************************
-  * SPACES
-  * A space is a trivial piece
-  ***************************************************/
+/***************************************************
+* SPACES
+* A space is a trivial piece
+***************************************************/
 class Space : public Piece
 {
    friend TestSpace;
 public:
-   Space(int c, int r) : Piece(9, 9)   {               }
-   ~Space()                            {               }
-   PieceType getType()           const { return ROOK;  }
-   void display(ogstream* pgout) const {               }
+   Space(int c, int r)
+      : Piece(Position(c, r), false)
+   {
+   }
+   ~Space() {}
+   PieceType getType() const override { return SPACE; }
+   void display(ogstream* pgout) const override {}
 };
+

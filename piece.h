@@ -51,24 +51,24 @@ public:
    friend TestBoard;
 
    // constructors and stuff
-   Piece(const Position& pos, bool isWhite = true) {}
-   Piece(int c, int r, bool isWhite = true) {}
-   Piece(const Piece& piece) {}
+   Piece(const Position& pos, bool isWhite = true);
+   Piece(int c, int r, bool isWhite = true);
+   Piece(const Piece& piece);
    virtual ~Piece() {}
    virtual const Piece& operator = (const Piece& rhs);
 
    // getters
-   virtual bool operator == (PieceType pt) const { return true; }
-   virtual bool operator != (PieceType pt) const { return true; }
-   virtual bool isWhite()                  const { return true; }
-   virtual bool isMoved()                  const { return true; }
-   virtual int  getNMoves()                const { return 9999; }
+   bool operator == (PieceType pt) const;
+   bool operator != (PieceType pt) const;
+   virtual bool isWhite() const;
+   virtual bool isMoved() const;
+   virtual int getNMoves() const;
    virtual void decrementNMoves() {}
-   virtual const Position& getPosition()  const { return Position(); }
-   virtual bool justMoved(int currentMove) const { return true; }
+   virtual const Position& getPosition() const;
+   virtual bool justMoved(int currentMove) const;
 
    // setter
-   virtual void setLastMove(int currentMove) {}
+   virtual void setLastMove(int currentMove);
 
    // overwritten by the various pieces
    virtual PieceType getType()                                    const = 0;
@@ -135,6 +135,7 @@ public:
    void decrementNMoves() { assert(false); }
    const Position& getPosition()  const { assert(false); return position; }
    bool justMoved(int currentMove) const { assert(false); return true; }
+
 
    // setter
    void setLastMove(int currentMove) { assert(false); }
