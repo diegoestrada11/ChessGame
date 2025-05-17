@@ -62,7 +62,7 @@ public:
    bool operator == (const Position& rhs) const 
                      { return this->colRow == rhs.colRow; }
    bool operator != (const Position& rhs) const 
-                     { return this != &rhs; }
+                     { return this->colRow != rhs.colRow; }
    const Position& operator =  (const Position& rhs);
 
    // Location : The Position class can work with locations, which

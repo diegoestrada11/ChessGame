@@ -35,14 +35,43 @@ using namespace std;
  ***********************************************/
 void Board::reset(bool fFree)
 {
-   // free everything
-   for (int r = 0; r < 8; r++)
-      for (int c = 0; c < 8; c++)
-         board[c][r] = nullptr;
-}
+   if (fFree)
+      free();
 
-// we really REALLY need to delete this.
-Space space(0,0);
+   // clear all squares
+   for (int c = 0; c < 8; ++c)
+      for (int r = 0; r < 8; ++r)
+         board[c][r] = nullptr;
+
+   board[1][0] = new Knight(1, 0, true);
+   board[6][0] = new Knight(6, 0, true);
+   //board[0][0] = new Rook(0, 0, true);
+   //board[2][0] = new Bishop(2, 0, true);
+   //board[3][0] = new Queen(3, 0, true);
+   //board[4][0] = new King(4, 0, true);
+   //board[5][0] = new Bishop(5, 0, true);
+   //board[7][0] = new Rook(7, 0, true);
+
+   //for (int c = 0; c < 8; ++c)
+   //   board[c][1] = new Pawn(c, 1, true);
+
+   //// Black pawns (row 6)
+   //for (int c = 0; c < 8; ++c)
+   //   board[c][6] = new Pawn(c, 6, false);
+
+   board[6][7] = new Knight(6, 7, false);
+   board[1][7] = new Knight(1, 7, false);
+   //board[0][7] = new Rook(0, 7, false);
+   //board[2][7] = new Bishop(2, 7, false);
+   //board[3][7] = new Queen(3, 7, false);
+   //board[4][7] = new King(4, 7, false);
+   //board[5][7] = new Bishop(5, 7, false);
+   //board[7][7] = new Rook(7, 7, false);
+
+   // Start move counter at zero
+   numMoves = 0;
+}
+Space space(0, 0);
 
 /***********************************************
 * BOARD : GET
@@ -65,6 +94,13 @@ Piece& Board::operator [] (const Position& pos)
  ***********************************************/
 void Board::display(const Position& posHover, const Position& posSelect) const
 {
+   pgout->drawBoard();
+
+   // draw each piece that’s present
+   for (int c = 0; c < 8; ++c)
+      for (int r = 0; r < 8; ++r)
+         if (board[c][r])
+            board[c][r]->display(pgout);
 
 }
 
@@ -74,6 +110,8 @@ void Board::display(const Position& posHover, const Position& posSelect) const
  ************************************************/
 Board::Board(ogstream* pgout, bool noreset) : pgout(pgout), numMoves(0)
 {
+   if (!noreset)
+      reset();
 
 }
 
@@ -83,7 +121,12 @@ Board::Board(ogstream* pgout, bool noreset) : pgout(pgout), numMoves(0)
  ************************************************/
 void Board::free()
 {
-
+   for (int c = 0; c < 8; ++c)
+      for (int r = 0; r < 8; ++r)
+      {
+         delete board[c][r];
+         board[c][r] = nullptr;
+      }
 }
 
 /**********************************************
@@ -92,6 +135,15 @@ void Board::free()
  *********************************************/
 void Board::assertBoard() const
 {
+   for (int c = 0; c < 8; ++c)
+      for (int r = 0; r < 8; ++r)
+      {
+         if (board[c][r])
+         {
+            Position pos = board[c][r]->getPosition();
+            assert(pos.getCol() == c && pos.getRow() == r);
+         }
+      }
 
 }
 
@@ -102,6 +154,27 @@ void Board::assertBoard() const
  *********************************************/
 void Board::move(const Move& move)
 {
+   // advance global move count
+   ++numMoves;
+
+   Position src = move.getSource();
+   Position dst = move.getDest();
+   int sc = src.getCol(), sr = src.getRow();
+   int dc = dst.getCol(), dr = dst.getRow();
+
+   Piece* p = board[sc][sr];
+   if (!p)
+      return;   
+
+   // only delete when capture != SPACE
+   if (move.getCapture() != SPACE)
+      delete board[dc][dr];
+
+   board[dc][dr] = p;
+
+   board[sc][sr] = new Space(sc, sr);
+
+   p->setLastMove(numMoves);
 
 }
 

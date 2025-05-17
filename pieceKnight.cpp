@@ -13,7 +13,6 @@
 
 
 
-// All eight knight L-shaped offsets
 static const Delta KNIGHT_OFFSETS[8] = 
 {
    {+1,+2}, {+2,+1}, {+2,-1}, {+1,-2},
@@ -26,6 +25,7 @@ static const Delta KNIGHT_OFFSETS[8] =
  ***************************************************/
 void Knight::display(ogstream* pgout) const
 {
+   pgout->drawKnight(position, isWhite());
 
 }
 
@@ -37,35 +37,24 @@ void Knight::getMoves(set <Move>& moves, const Board& board) const
 {
    Position src = position;
 
-   // Are we on a BoardEmpty?  (this only succeeds if board is actually BoardEmpty)
-   bool isEmptyBoard = dynamic_cast<const BoardEmpty*>(&board) != nullptr;
-
-   for (auto d : KNIGHT_OFFSETS)
+   for (const Delta& d : KNIGHT_OFFSETS)
    {
-      Position dst(src, d);
+      int c = src.getCol() + d.dCol;
+      int r = src.getRow() + d.dRow;
+      Position dst(c, r);
       if (!dst.isValid())
          continue;
 
-      const Piece& target = board[dst];
-      PieceType pt = target.getType();
-      bool      same = target.isWhite() == this->isWhite();
-      bool      enemy = (pt != SPACE && !same);
+      const Piece& occ = board[dst];
+      PieceType pt = occ.getType();
 
       if (pt == SPACE)
       {
-         // normal quiet move
-         moves.insert(Move(src, dst, SPACE, Move::MOVE, this->isWhite()));
+         moves.insert(Move(src, dst, SPACE, Move::MOVE, isWhite()));
       }
-      else if (enemy)
+      else if (occ.isWhite() != this->isWhite())
       {
-         // capture
-         moves.insert(Move(src, dst, pt, Move::MOVE, this->isWhite()));
+         moves.insert(Move(src, dst, pt, Move::MOVE, isWhite()));
       }
-      else if (same && isEmptyBoard)
-      {
-         // on BoardEmpty we treat friendly as if it were empty
-         moves.insert(Move(src, dst, SPACE, Move::MOVE, this->isWhite()));
-      }
-      // otherwise (same on a real Board) -> skip entirely
    }
 }
