@@ -17,7 +17,6 @@
 #include <cassert>     // because we are paranoid
 using namespace std;
 
-
 /************************************************
  * PIECE : ASSIGN
  ***********************************************/
@@ -38,5 +37,30 @@ void Piece::getMoves(set <Move>& movesSet, const Board& board) const
 {
 }
 
+/************************************************
+ * PIECE : IS WHITE
+ * Returns true if this piece is white, false otherwise
+ ***********************************************/
+bool Piece::isWhite() const
+{
+   return fWhite;
+}
 
+/************************************************
+ * PIECE : SET LAST MOVE
+ * Sets the last move number and increments move count
+ ***********************************************/
+void Piece::setLastMove(int currentMove)
+{
+   lastMove = currentMove;
+   nMoves++;
+}
 
+/************************************************
+ * PIECE : JUST MOVED
+ * Returns true if this piece moved in the last move
+ ***********************************************/
+bool Piece::justMoved(int currentMove) const
+{
+   return lastMove == currentMove - 1;
+}
