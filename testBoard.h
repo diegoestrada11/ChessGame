@@ -23,6 +23,8 @@ public:
    void run()
    {
       // construct
+      construct_dummyBoard();
+      construct_emptyBoard();
       construct_default();
 
       // move
@@ -67,7 +69,8 @@ public:
       report("Board");
    }
 private:
-   
+   void construct_dummyBoard();
+   void construct_emptyBoard();
    void createDummyBoard(Board & board);
    void construct_default();
    void getCurrentMove_initial();
