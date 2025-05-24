@@ -34,7 +34,31 @@
   **************************************/
 void TestPawn::getMoves_simpleWhite()
 {
-   assertUnit(NOT_YET_IMPLEMENTED);
+   // SETUP
+   BoardEmpty board;
+   Pawn pawn(1, 3, true);   // b4
+   board.board[1][3] = &pawn;
+
+   // EXERCISE
+   std::set<Move> moves;
+   pawn.getMoves(moves, board);
+
+   // VERIFY
+   // Expect exactly one move: b4 -> b5
+   assertUnit(moves.size() == 1);
+
+   // Construct the expected Move and verify it's in the set
+   Move expected(
+      Position(1, 3),   // from b4
+      Position(1, 4),   // to   b5
+      SPACE,            // no capture
+      Move::MOVE,       // normal pawn move
+      true              // white to move
+   );
+   assertUnit(moves.find(expected) != moves.end());
+
+   // TEARDOWN
+   board.board[1][3] = nullptr;
 }
 
 /*************************************
@@ -56,7 +80,30 @@ void TestPawn::getMoves_simpleWhite()
  **************************************/
 void TestPawn::getMoves_simpleBlack()
 {
-   assertUnit(NOT_YET_IMPLEMENTED);
+   // SETUP
+   BoardEmpty board;
+   Pawn pawn(1, 3, false);   // b4, black pawn
+   board.board[1][3] = &pawn;
+
+   // EXERCISE
+   std::set<Move> moves;
+   pawn.getMoves(moves, board);
+
+   // VERIFY
+   // Expect exactly one move: b4 -> b3
+   assertUnit(moves.size() == 1);
+
+   Move expected(
+      Position(1, 3),   // from b4
+      Position(1, 2),   // to   b3
+      SPACE,            // no capture
+      Move::MOVE,       // normal pawn move
+      false             // black to move
+   );
+   assertUnit(moves.find(expected) != moves.end());
+
+   // TEARDOWN
+   board.board[1][3] = nullptr;
 }
 
 
@@ -79,7 +126,38 @@ void TestPawn::getMoves_simpleBlack()
  **************************************/
 void TestPawn::getMoves_initialAdvanceWhite()
 {
-   assertUnit(NOT_YET_IMPLEMENTED);
+   // SETUP
+   BoardEmpty board;
+   Pawn pawn(1, 1, true);   // b2
+   board.board[1][1] = &pawn;
+
+   // EXERCISE
+   std::set<Move> moves;
+   pawn.getMoves(moves, board);
+
+   // VERIFY
+   // Expect two moves: b2 -> b3 and b2 -> b4
+   assertUnit(moves.size() == 2);
+
+   Move advanceOne(
+      Position(1, 1),   // from b2
+      Position(1, 2),   // to   b3
+      SPACE,            // no capture
+      Move::MOVE,       // normal pawn move
+      true              // white to move
+   );
+   Move advanceTwo(
+      Position(1, 1),   // from b2
+      Position(1, 3),   // to   b4
+      SPACE,
+      Move::MOVE,
+      true
+   );
+   assertUnit(moves.find(advanceOne) != moves.end());
+   assertUnit(moves.find(advanceTwo) != moves.end());
+
+   // TEARDOWN
+   board.board[1][1] = nullptr;
 }
 
 /*************************************
@@ -101,7 +179,38 @@ void TestPawn::getMoves_initialAdvanceWhite()
  **************************************/
 void TestPawn::getMoves_initialAdvanceBlack()
 {
-   assertUnit(NOT_YET_IMPLEMENTED);
+   // SETUP
+   BoardEmpty board;
+   Pawn pawn(2, 6, false);   // c7
+   board.board[2][6] = &pawn;
+
+   // EXERCISE
+   std::set<Move> moves;
+   pawn.getMoves(moves, board);
+
+   // VERIFY
+   // Expect two moves: c7 -> c6 and c7 -> c5
+   assertUnit(moves.size() == 2);
+
+   Move advanceOne(
+      Position(2, 6),   // from c7
+      Position(2, 5),   // to   c6
+      SPACE,            // no capture
+      Move::MOVE,       // normal pawn move
+      false             // black to move
+   );
+   Move advanceTwo(
+      Position(2, 6),   // from c7
+      Position(2, 4),   // to   c5
+      SPACE,
+      Move::MOVE,
+      false
+   );
+   assertUnit(moves.find(advanceOne) != moves.end());
+   assertUnit(moves.find(advanceTwo) != moves.end());
+
+   // TEARDOWN
+   board.board[2][6] = nullptr;
 }
 
 
@@ -124,7 +233,47 @@ void TestPawn::getMoves_initialAdvanceBlack()
  **************************************/
 void TestPawn::getMoves_captureWhite()
 {
-   assertUnit(NOT_YET_IMPLEMENTED);
+   // SETUP
+   BoardEmpty board;
+   Pawn pawn(1, 5, true);            // b6
+   board.board[1][5] = &pawn;
+
+   // Place opposing pawns to capture
+   Black blackA7(PAWN), blackB7(PAWN), blackC7(PAWN);
+   board.board[0][6] = &blackA7; // a7
+   board.board[1][6] = &blackB7; // b7 (blocks forward)
+   board.board[2][6] = &blackC7; // c7
+
+   // EXERCISE
+   std::set<Move> moves;
+   pawn.getMoves(moves, board);
+
+   // VERIFY
+   // Only two captures (diagonals), no forward move
+   assertUnit(moves.size() == 2);
+
+   Move captureA7(
+      Position(1, 5),   // from b6
+      Position(0, 6),   // to   a7
+      PAWN,             // capture pawn
+      Move::MOVE,       // normal move type
+      true              // white to move
+   );
+   Move captureC7(
+      Position(1, 5),   // from b6
+      Position(2, 6),   // to   c7
+      PAWN,
+      Move::MOVE,
+      true
+   );
+   assertUnit(moves.find(captureA7) != moves.end());
+   assertUnit(moves.find(captureC7) != moves.end());
+
+   // TEARDOWN
+   board.board[1][5] = nullptr;
+   board.board[0][6] = nullptr;
+   board.board[1][6] = nullptr;
+   board.board[2][6] = nullptr;
 }
 
 
@@ -147,7 +296,47 @@ void TestPawn::getMoves_captureWhite()
  **************************************/
 void TestPawn::getMoves_captureBlack()
 {
-   assertUnit(NOT_YET_IMPLEMENTED);
+   // SETUP
+   BoardEmpty board;
+   Pawn pawn(1, 5, false);     // b6, black pawn
+   board.board[1][5] = &pawn;
+
+   // Place opposing white pawns
+   White whiteA5(PAWN), whiteB5(PAWN), whiteC5(PAWN);
+   board.board[0][4] = &whiteA5; // a5
+   board.board[1][4] = &whiteB5; // b5 (blocks forward)
+   board.board[2][4] = &whiteC5; // c5
+
+   // EXERCISE
+   std::set<Move> moves;
+   pawn.getMoves(moves, board);
+
+   // VERIFY
+   // Only two captures (diagonals), no forward move
+   assertUnit(moves.size() == 2);
+
+   Move captureA5(
+      Position(1, 5),   // from b6
+      Position(0, 4),   // to   a5
+      PAWN,             // captured pawn
+      Move::MOVE,       // normal move
+      false             // black to move
+   );
+   Move captureC5(
+      Position(1, 5),   // from b6
+      Position(2, 4),   // to   c5
+      PAWN,
+      Move::MOVE,
+      false
+   );
+   assertUnit(moves.find(captureA5) != moves.end());
+   assertUnit(moves.find(captureC5) != moves.end());
+
+   // TEARDOWN
+   board.board[1][5] = nullptr;
+   board.board[0][4] = nullptr;
+   board.board[1][4] = nullptr;
+   board.board[2][4] = nullptr;
 }
 
 /*************************************

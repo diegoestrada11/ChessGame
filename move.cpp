@@ -50,21 +50,20 @@ Move::Move(const std::string& notation)
  ***************************************************/
 bool Move::operator<(const Move& rhs) const {
    if (source != rhs.source)    return source < rhs.source;
-   if (dest != rhs.dest)      return dest < rhs.dest;
-   if (capture != rhs.capture)   return capture < rhs.capture;
-   if (moveType != rhs.moveType)  return moveType < rhs.moveType;
+   if (dest != rhs.dest)        return dest < rhs.dest;
+   if (capture != rhs.capture)  return capture < rhs.capture;
+   if (moveType != rhs.moveType)return moveType < rhs.moveType;
    return isWhite < rhs.isWhite;
 }
 
-
-
 bool Move::operator==(const Move& rhs) const {
    
-   return source == rhs.source && dest == rhs.dest && capture == rhs.capture
-      && promote == rhs.promote && moveType == rhs.moveType && isWhite == rhs.isWhite;
+   return source == rhs.source &&
+      dest == rhs.dest &&
+      capture == rhs.capture &&
+      moveType == rhs.moveType;
    
 }
-
 
 void Move::read(const string& rhs) {
    string s;

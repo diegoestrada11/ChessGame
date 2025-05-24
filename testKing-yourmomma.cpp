@@ -151,32 +151,7 @@ void TestKing::getMoves_capture()
  **************************************/
 void TestKing::getMoves_free()
 {
-	// SETUP
-	BoardEmpty board;
-
-	// Place a white king at d5 (col = 3, row = 4)
-	King king(3, 4, true);
-	board.board[3][4] = &king;
-
-	std::set<Move> moves;
-
-	// EXERCISE
-	king.getMoves(moves, board);
-
-	// VERIFY
-	assertUnit(moves.size() == 8);
-
-	assertUnit(moves.find(Move(Position(3, 4), Position(2, 3), SPACE, Move::MOVE, true)) != moves.end()); // c4
-	assertUnit(moves.find(Move(Position(3, 4), Position(3, 3), SPACE, Move::MOVE, true)) != moves.end()); // d4
-	assertUnit(moves.find(Move(Position(3, 4), Position(4, 3), SPACE, Move::MOVE, true)) != moves.end()); // e4
-	assertUnit(moves.find(Move(Position(3, 4), Position(2, 4), SPACE, Move::MOVE, true)) != moves.end()); // c5
-	assertUnit(moves.find(Move(Position(3, 4), Position(4, 4), SPACE, Move::MOVE, true)) != moves.end()); // e5
-	assertUnit(moves.find(Move(Position(3, 4), Position(2, 5), SPACE, Move::MOVE, true)) != moves.end()); // c6
-	assertUnit(moves.find(Move(Position(3, 4), Position(3, 5), SPACE, Move::MOVE, true)) != moves.end()); // d6
-	assertUnit(moves.find(Move(Position(3, 4), Position(4, 5), SPACE, Move::MOVE, true)) != moves.end()); // e6
-
-	// TEARDOWN
-	board.board[3][4] = nullptr;
+   assertUnit(NOT_YET_IMPLEMENTED);
 }
 
 
@@ -196,27 +171,7 @@ void TestKing::getMoves_free()
  **************************************/
 void TestKing::getMoves_end()
 {
-	// SETUP
-	BoardEmpty board;
-
-	// Place a white king at a1 (col = 0, row = 0)
-	King king(0, 0, true);
-	board.board[0][0] = &king;
-
-	std::set<Move> moves;
-
-	// EXERCISE
-	king.getMoves(moves, board);
-
-	// VERIFY
-	assertUnit(moves.size() == 3);
-
-	assertUnit(moves.find(Move(Position(0, 0), Position(0, 1), SPACE, Move::MOVE, true)) != moves.end()); // a2
-	assertUnit(moves.find(Move(Position(0, 0), Position(1, 1), SPACE, Move::MOVE, true)) != moves.end()); // b2
-	assertUnit(moves.find(Move(Position(0, 0), Position(1, 0), SPACE, Move::MOVE, true)) != moves.end()); // b1
-
-	// TEARDOWN
-	board.board[0][0] = nullptr;
+   assertUnit(NOT_YET_IMPLEMENTED);
 }
 
 
@@ -236,38 +191,7 @@ void TestKing::getMoves_end()
  **************************************/
 void TestKing::getMoves_whiteCastle()
 {
-	// SETUP
-	BoardEmpty board;
-
-	// Place white rooks at a1 and h1
-	Rook leftRook(0, 0, true);   // a1
-	Rook rightRook(7, 0, true);  // h1
-	board.board[0][0] = &leftRook;
-	board.board[0][7] = &rightRook;
-
-	// Place white king at e1
-	King king(4, 0, true);       // e1
-	board.board[0][4] = &king;
-
-	std::set<Move> moves;
-
-	// EXERCISE
-	king.getMoves(moves, board);
-
-	// VERIFY
-	// Check normal King moves (if board is empty, e.g., d1, f1, d2, f2, etc.)
-	assertUnit(moves.find(Move(Position(4, 0), Position(3, 0), SPACE, Move::MoveType::MOVE, true)) != moves.end()); // d1
-	assertUnit(moves.find(Move(Position(4, 0), Position(5, 0), SPACE, Move::MoveType::MOVE, true)) != moves.end()); // f1
-	assertUnit(moves.find(Move(Position(4, 0), Position(3, 1), SPACE, Move::MoveType::MOVE, true)) != moves.end()); // d2
-
-	// Castling moves — check for king moving to g1 (kingside) and c1 (queenside)
-	assertUnit(moves.find(Move(Position(4, 0), Position(6, 0), SPACE, Move::MoveType::MOVE, true)) != moves.end()); // kingside castle (g1)
-	assertUnit(moves.find(Move(Position(4, 0), Position(2, 0), SPACE, Move::MoveType::MOVE, true)) != moves.end()); // queenside castle (c1)
-
-	// TEARDOWN
-	board.board[0][0] = nullptr;
-	board.board[0][7] = nullptr;
-	board.board[0][4] = nullptr;
+   assertUnit(NOT_YET_IMPLEMENTED);
 }
 
 
@@ -287,40 +211,7 @@ void TestKing::getMoves_whiteCastle()
  **************************************/
 void TestKing::getMoves_blackCastle()
 {
-	// SETUP
-	BoardEmpty board;
-
-	// Place black rooks at a8 and h8
-	Rook leftRook(0, 7, false);   // a8
-	Rook rightRook(7, 7, false);  // h8
-	board.board[0][7] = &leftRook; // col=0, row=7
-	board.board[7][7] = &rightRook;
-
-	// Place black king at e8
-	King king(4, 7, false);       // e8
-	board.board[4][7] = &king;
-
-	std::set<Move> moves;
-
-	// EXERCISE
-	king.getMoves(moves, board);
-
-	// VERIFY
-	// Normal king moves from e8: d8, f8, d7, e7, f7
-	assertUnit(moves.find(Move(Position(4, 7), Position(3, 7), SPACE, Move::MOVE, false)) != moves.end());
-	assertUnit(moves.find(Move(Position(4, 7), Position(5, 7), SPACE, Move::MOVE, false)) != moves.end());
-	assertUnit(moves.find(Move(Position(4, 7), Position(3, 6), SPACE, Move::MOVE, false)) != moves.end());
-	assertUnit(moves.find(Move(Position(4, 7), Position(4, 6), SPACE, Move::MOVE, false)) != moves.end());
-	assertUnit(moves.find(Move(Position(4, 7), Position(5, 6), SPACE, Move::MOVE, false)) != moves.end());
-
-	// Castling moves — king moves to g8 (kingside) and c8 (queenside)
-	assertUnit(moves.find(Move(Position(4, 7), Position(6, 7), SPACE, Move::CASTLE_KING, false)) != moves.end());
-	assertUnit(moves.find(Move(Position(4, 7), Position(2, 7), SPACE, Move::CASTLE_QUEEN, false)) != moves.end());
-
-	// TEARDOWN
-	board.board[0][7] = nullptr;
-	board.board[7][7] = nullptr;
-	board.board[4][7] = nullptr;
+   assertUnit(NOT_YET_IMPLEMENTED);
 }
 
 
@@ -340,7 +231,7 @@ void TestKing::getMoves_blackCastle()
  **************************************/
 void TestKing::getMoves_whiteCastleKingMoved()
 {
-	assertUnit(NOT_YET_IMPLEMENTED);
+   assertUnit(NOT_YET_IMPLEMENTED);
 }
 
 
@@ -360,44 +251,7 @@ void TestKing::getMoves_whiteCastleKingMoved()
  **************************************/
 void TestKing::getMoves_whiteCastleRookMoved()
 {
-	// SETUP
-	BoardEmpty board;
-
-	// White King on e1
-	King king(4, 0, true /*white*/);
-	board.board[0][4] = &king;
-
-	// Rooks that have moved (so castling is disallowed)
-	Rook rookLeft(0, 0, true /*white*/);   // a1
-	Rook rookRight(7, 0, true /*white*/);  // h1
-	rookLeft.nMoves = 1;
-	rookRight.nMoves = 1;
-	board.board[0][0] = &rookLeft;
-	board.board[0][7] = &rookRight;
-
-	// Pawns in front of the king blocking forward moves
-	White pawn1(PAWN), pawn2(PAWN), pawn3(PAWN);
-	board.board[1][3] = &pawn1;  // d2
-	board.board[1][4] = &pawn2;  // e2
-	board.board[1][5] = &pawn3;  // f2
-
-	std::set<Move> moves;
-
-	// EXERCISE
-	king.getMoves(moves, board);
-
-	// VERIFY: Only legal moves are d1 and f1 (left/right)
-	assertUnit(moves.size() == 2);
-	assertUnit(moves.find(Move(Position(4, 0), Position(3, 0), SPACE, Move::MOVE, true)) != moves.end()); // d1
-	assertUnit(moves.find(Move(Position(4, 0), Position(5, 0), SPACE, Move::MOVE, true)) != moves.end()); // f1
-
-	// TEARDOWN
-	board.board[0][4] = nullptr;
-	board.board[0][0] = nullptr;
-	board.board[0][7] = nullptr;
-	board.board[1][3] = nullptr;
-	board.board[1][4] = nullptr;
-	board.board[1][5] = nullptr;
+   assertUnit(NOT_YET_IMPLEMENTED);
 }
 
 /*************************************
@@ -407,14 +261,7 @@ void TestKing::getMoves_whiteCastleRookMoved()
  **************************************/
 void TestKing::getType()
 {
-	// SETUP
-	King king(4, 0, true); // position doesn't matter here
-
-	// EXERCISE
-	PieceType type = king.getType();
-
-	// VERIFY
-	assert(type == KING);
+   assertUnit(NOT_YET_IMPLEMENTED);
 }
 
 

@@ -49,6 +49,13 @@ public:
    bool operator==(const Move& rhs) const;
    void read(const string& rhs);
 
+   void setSource(const Position& source) { this->source = source; }
+   void setDest(const Position& dest) { this->dest = dest; }
+   void setCapture(PieceType capture) { this->capture = capture; }
+   void setPromote(PieceType promote) { this->promote = promote; }
+   void setMoveType(MoveType moveType) { this->moveType = moveType; }
+
+
 private:
    char letterFromPieceType(PieceType pt) const 
    {
@@ -60,7 +67,7 @@ private:
          case ROOK:   return 'r';
          case QUEEN:  return 'q';
          case KING:   return 'k';
-         default:     return '?'; 
+         default:     return '?';  
       }
    }
 

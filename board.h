@@ -52,7 +52,7 @@ public:
    virtual void display(const Position& posHover,
       const Position& posSelect) const;
    virtual const Piece& operator [] (const Position& pos) const;
-
+   bool isUnderAttack(const Position& pos, bool byWhite) const;
    // setters
    virtual void free();
    virtual void reset(bool fFree = true);

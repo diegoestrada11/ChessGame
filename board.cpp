@@ -192,3 +192,26 @@ BoardEmpty::~BoardEmpty()
 {
    delete pSpace;
 }
+
+
+bool Board::isUnderAttack(const Position& pos, bool byWhite) const
+{
+   for (int c = 0; c < 8; ++c)
+   {
+      for (int r = 0; r < 8; ++r)
+      {
+         const Piece* piece = board[c][r];
+         if (piece && piece->isWhite() == byWhite)
+         {
+            std::set<Move> temp;
+            piece->getMoves(temp, *this);
+            for (const Move& m : temp)
+            {
+               if (m.getDest() == pos)
+                  return true;
+            }
+         }
+      }
+   }
+   return false;
+}
