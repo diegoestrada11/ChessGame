@@ -213,7 +213,7 @@ public:
 
 class Black : public PieceDummy
 {
-   PieceType pt;
+   PieceType pt;                                                                                 
 public:
    Black() : PieceDummy(), pt(ROOK) {}
    Black(PieceType pt) : PieceDummy(), pt(pt) {}

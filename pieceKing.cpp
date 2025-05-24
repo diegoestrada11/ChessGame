@@ -52,83 +52,68 @@ void King::addKingMoves(const Direction directions[], int numDirections,
  *********************************************/
 void King::getMoves(std::set <Move>& moves, const Board& board) const
 {
-   // Eight possible one-step directions
-   const int directions[8][2] = {
+   // First, generate all one-step moves uniformly:
+   static const Direction oneStep[8] = {
        {-1,  1}, { 0,  1}, { 1,  1},
        {-1,  0},           { 1,  0},
        {-1, -1}, { 0, -1}, { 1, -1}
    };
+   addKingMoves(oneStep, 8, board, moves);
 
-   Position start = this->getPosition();
-   for (int d = 0; d < 8; ++d)
+   // Now castling:
+   if (nMoves != 0)
+      return;     // king has already moved, no castling
+
+   Position start = getPosition();
+   if (fWhite)
    {
-      int dc = directions[d][0];
-      int dr = directions[d][1];
-      Position end(start.getCol() + dc, start.getRow() + dr);
-      if (!end.isValid())
-         continue;
-      const Piece& p = board[end];
-      if (p.getType() == SPACE || p.isWhite() != this->isWhite())
+      // kingside
+      const Piece& rookK = board[Position("h1")];
+      if (rookK.getType() == ROOK && rookK.isWhite() && rookK.getNMoves() == 0
+         && board[Position("f1")].getType() == SPACE
+         && board[Position("g1")].getType() == SPACE
+         && !board.isUnderAttack(Position("e1"), false)
+         && !board.isUnderAttack(Position("f1"), false)
+         && !board.isUnderAttack(Position("g1"), false))
       {
-         moves.insert(Move(start, end, p.getType(), Move::MOVE, this->isWhite()));
+         moves.insert(Move(start, Position("g1"), SPACE, Move::CASTLE_KING, true));
+      }
+      // queenside
+      const Piece& rookQ = board[Position("a1")];
+      if (rookQ.getType() == ROOK && rookQ.isWhite() && rookQ.getNMoves() == 0
+         && board[Position("b1")].getType() == SPACE
+         && board[Position("c1")].getType() == SPACE
+         && board[Position("d1")].getType() == SPACE
+         && !board.isUnderAttack(Position("e1"), false)
+         && !board.isUnderAttack(Position("d1"), false)
+         && !board.isUnderAttack(Position("c1"), false))
+      {
+         moves.insert(Move(start, Position("c1"), SPACE, Move::CASTLE_QUEEN, true));
       }
    }
-
-   // Castle
-   if (nMoves == 0)
+   else
    {
-      Position startPos = this->getPosition();
-
-      // King-side castling
-      if (fWhite)
+      // black side
+      const Piece& rookK = board[Position("h8")];
+      if (rookK.getType() == ROOK && !rookK.isWhite() && rookK.getNMoves() == 0
+         && board[Position("f8")].getType() == SPACE
+         && board[Position("g8")].getType() == SPACE
+         && !board.isUnderAttack(Position("e8"), true)
+         && !board.isUnderAttack(Position("f8"), true)
+         && !board.isUnderAttack(Position("g8"), true))
       {
-         const Piece& rook = board[Position("h1")];
-         if (rook.getType() == ROOK && rook.isWhite() && rook.getNMoves() == 0 &&
-            board[Position("f1")].getType() == SPACE &&
-            board[Position("g1")].getType() == SPACE &&
-            !board.isUnderAttack(Position("e1"), false) &&
-            !board.isUnderAttack(Position("f1"), false) &&
-            !board.isUnderAttack(Position("g1"), false))
-         {
-            moves.insert(Move(startPos, Position("g1"), SPACE, Move::CASTLE_KING, fWhite));
-         }
-
-         const Piece& rookQ = board[Position("a1")];
-         if (rookQ.getType() == ROOK && rookQ.isWhite() && rookQ.getNMoves() == 0 &&
-            board[Position("b1")].getType() == SPACE &&
-            board[Position("c1")].getType() == SPACE &&
-            board[Position("d1")].getType() == SPACE &&
-            !board.isUnderAttack(Position("e1"), false) &&
-            !board.isUnderAttack(Position("d1"), false) &&
-            !board.isUnderAttack(Position("c1"), false))
-         {
-            moves.insert(Move(startPos, Position("c1"), SPACE, Move::CASTLE_QUEEN, fWhite));
-         }
+         moves.insert(Move(start, Position("g8"), SPACE, Move::CASTLE_KING, false));
       }
-      else
+      const Piece& rookQ = board[Position("a8")];
+      if (rookQ.getType() == ROOK && !rookQ.isWhite() && rookQ.getNMoves() == 0
+         && board[Position("b8")].getType() == SPACE
+         && board[Position("c8")].getType() == SPACE
+         && board[Position("d8")].getType() == SPACE
+         && !board.isUnderAttack(Position("e8"), true)
+         && !board.isUnderAttack(Position("d8"), true)
+         && !board.isUnderAttack(Position("c8"), true))
       {
-         const Piece& rook = board[Position("h8")];
-         if (rook.getType() == ROOK && !rook.isWhite() && rook.getNMoves() == 0 &&
-            board[Position("f8")].getType() == SPACE &&
-            board[Position("g8")].getType() == SPACE &&
-            !board.isUnderAttack(Position("e8"), true) &&
-            !board.isUnderAttack(Position("f8"), true) &&
-            !board.isUnderAttack(Position("g8"), true))
-         {
-            moves.insert(Move(startPos, Position("g8"), SPACE, Move::CASTLE_KING, fWhite));
-         }
-
-         const Piece& rookQ = board[Position("a8")];
-         if (rookQ.getType() == ROOK && !rookQ.isWhite() && rookQ.getNMoves() == 0 &&
-            board[Position("b8")].getType() == SPACE &&
-            board[Position("c8")].getType() == SPACE &&
-            board[Position("d8")].getType() == SPACE &&
-            !board.isUnderAttack(Position("e8"), true) &&
-            !board.isUnderAttack(Position("d8"), true) &&
-            !board.isUnderAttack(Position("c8"), true))
-         {
-            moves.insert(Move(startPos, Position("c8"), SPACE, Move::CASTLE_QUEEN, fWhite));
-         }
+         moves.insert(Move(start, Position("c8"), SPACE, Move::CASTLE_QUEEN, false));
       }
    }
 }

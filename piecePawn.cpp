@@ -26,76 +26,53 @@ void Pawn::display(ogstream* pgout) const
  *********************************************/
 void Pawn::getMoves(set <Move>& moves, const Board& board) const
 {
-   int r;
-   int c;
-   Position p;
-   Move m;
-   const Piece* piece;
-   int rowDiff;
+   const int row = position.getRow();
+   const int col = position.getCol();
+   const int dir = fWhite ? +1 : -1;       // forward direction
+   const int startRow = fWhite ? 1 : 6;    // starting rank for two-step
+   const int promoRow = fWhite ? 7 : 0;     // back rank for promotion
 
-   if (fWhite)      
-      rowDiff = 1;
-   else
-      rowDiff = -1;
-
-   
-   r = position.getRow() + rowDiff;
-   c = position.getCol();
-   p = Position(c, r);
-   if (p.isValid())
-   {
-      piece = &board[p];
-      if (piece->getType() == SPACE)
-      {
-         addMove(moves, p, piece->getType());
-         
-         if (nMoves == 0)
-         {
-            r += rowDiff;
-            p = Position(c, r);
-            if (p.isValid())
-            {
-               piece = &board[p];
-               if (piece->getType() == SPACE)
-                  addMove(moves, p, piece->getType());
-            }
-         }
+   // 1) One-step forward
+   Position one(col, row + dir);
+   if (one.isValid() && board[one].getType() == SPACE) {
+      addMove(moves, one, SPACE);
+      // 2) Two-step forward
+      if (row == startRow) {
+         Position two(col, row + 2 * dir);
+         // ensure both intermediate and destination are empty
+         if (two.isValid()
+            && board[two].getType() == SPACE
+            && board[Position(col, row + dir)].getType() == SPACE)
+            addMove(moves, two, SPACE);
       }
    }
 
-   
-   r = position.getRow() + rowDiff;
-   c = position.getCol() + 1;
-   p = Position(c, r);
-   for (int i = 0; i < 2; i++)  
-   {
-      if (p.isValid())
-      {
-         piece = &board[p];
-         if (piece->getType() != SPACE && fWhite != piece->isWhite())
-            addMove(moves, p, piece->getType());
+   // 3) Normal captures
+   for (int dc : {-1, +1}) {
+      Position cap(col + dc, row + dir);
+      if (cap.isValid()) {
+         const Piece& p = board[cap];
+         if (p.getType() != SPACE && p.isWhite() != fWhite)
+            addMove(moves, cap, p.getType());
       }
-      // attack left
-      c = position.getCol() - 1;
-      p = Position(c, r);
    }
 
-   // enpassant right
-   p = Position(position.getCol() + 1, position.getRow());
-   for (int i = 0; i < 2; i++)  // loop over to get the other side
-   {
-      if (p.isValid())
-      {
-         piece = &board[p];
-         if (piece->getType() == PAWN && piece->isWhite() != fWhite && piece->justMoved(board.getCurrentMove()))
+   // 4) En passant (only from rank 5 for White, rank 4 for Black)
+   const int epRank = fWhite ? 4 : 3;
+   if (row == epRank) {
+      for (int dc : {-1, +1}) {
+         Position side(col + dc, row);
+         if (!side.isValid()) continue;
+         const Piece& neighbor = board[side];
+         if (neighbor.getType() == PAWN
+            && neighbor.isWhite() != fWhite
+            && neighbor.justMoved(board.getCurrentMove()))
          {
-            p.setRow(p.getRow() + rowDiff);
-            addMove(moves, p, PAWN, true);
+            Position land(side.getCol(), side.getRow() + dir);
+            // landing square must be empty
+            if (land.isValid() && board[land].getType() == SPACE)
+               addMove(moves, land, PAWN, true);
          }
       }
-      // enpassant left
-      c = position.getCol() - 1;
-      r = position.getRow();
-      p = Position(c, r);
    }
 }

@@ -125,6 +125,8 @@ public:
       return p ? *p : *pSpace;
    }
    int  getCurrentMove() const override { return moveNumber; }
+   void setCurrentMove(int move) { moveNumber = move; }
+
 private:
    Piece* pSpace;
    int moveNumber;

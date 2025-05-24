@@ -13,8 +13,6 @@
 #include "uiDraw.h"
 #include <cassert>      
 
-
-
  /*************************************
   * GET MOVES TEST Simple
   * White pawn in the middle of the board move forward one space: b4 --> b5
@@ -38,24 +36,15 @@ void TestPawn::getMoves_simpleWhite()
    BoardEmpty board;
    Pawn pawn(1, 3, true);   // b4
    board.board[1][3] = &pawn;
+   set<Move> moves;
 
    // EXERCISE
-   std::set<Move> moves;
    pawn.getMoves(moves, board);
 
    // VERIFY
-   // Expect exactly one move: b4 -> b5
    assertUnit(moves.size() == 1);
-
-   // Construct the expected Move and verify it's in the set
-   Move expected(
-      Position(1, 3),   // from b4
-      Position(1, 4),   // to   b5
-      SPACE,            // no capture
-      Move::MOVE,       // normal pawn move
-      true              // white to move
-   );
-   assertUnit(moves.find(expected) != moves.end());
+   Move expected(Position("b4"), Position("b5"), SPACE, Move::MOVE, true);
+   assertUnit(moves.count(expected) == 1);
 
    // TEARDOWN
    board.board[1][3] = nullptr;
@@ -82,25 +71,17 @@ void TestPawn::getMoves_simpleBlack()
 {
    // SETUP
    BoardEmpty board;
-   Pawn pawn(1, 3, false);   // b4, black pawn
+   Pawn pawn(1, 3, false);   // b4
    board.board[1][3] = &pawn;
+   set<Move> moves;
 
    // EXERCISE
-   std::set<Move> moves;
    pawn.getMoves(moves, board);
 
    // VERIFY
-   // Expect exactly one move: b4 -> b3
    assertUnit(moves.size() == 1);
-
-   Move expected(
-      Position(1, 3),   // from b4
-      Position(1, 2),   // to   b3
-      SPACE,            // no capture
-      Move::MOVE,       // normal pawn move
-      false             // black to move
-   );
-   assertUnit(moves.find(expected) != moves.end());
+   Move expected(Position("b4"), Position("b3"), SPACE, Move::MOVE, false);
+   assertUnit(moves.count(expected) == 1);
 
    // TEARDOWN
    board.board[1][3] = nullptr;
@@ -130,31 +111,17 @@ void TestPawn::getMoves_initialAdvanceWhite()
    BoardEmpty board;
    Pawn pawn(1, 1, true);   // b2
    board.board[1][1] = &pawn;
+   set<Move> moves;
 
    // EXERCISE
-   std::set<Move> moves;
    pawn.getMoves(moves, board);
 
    // VERIFY
-   // Expect two moves: b2 -> b3 and b2 -> b4
    assertUnit(moves.size() == 2);
-
-   Move advanceOne(
-      Position(1, 1),   // from b2
-      Position(1, 2),   // to   b3
-      SPACE,            // no capture
-      Move::MOVE,       // normal pawn move
-      true              // white to move
-   );
-   Move advanceTwo(
-      Position(1, 1),   // from b2
-      Position(1, 3),   // to   b4
-      SPACE,
-      Move::MOVE,
-      true
-   );
-   assertUnit(moves.find(advanceOne) != moves.end());
-   assertUnit(moves.find(advanceTwo) != moves.end());
+   Move one(Position("b2"), Position("b3"), SPACE, Move::MOVE, true);
+   Move two(Position("b2"), Position("b4"), SPACE, Move::MOVE, true);
+   assertUnit(moves.count(one) == 1);
+   assertUnit(moves.count(two) == 1);
 
    // TEARDOWN
    board.board[1][1] = nullptr;
@@ -183,31 +150,17 @@ void TestPawn::getMoves_initialAdvanceBlack()
    BoardEmpty board;
    Pawn pawn(2, 6, false);   // c7
    board.board[2][6] = &pawn;
+   set<Move> moves;
 
    // EXERCISE
-   std::set<Move> moves;
    pawn.getMoves(moves, board);
 
    // VERIFY
-   // Expect two moves: c7 -> c6 and c7 -> c5
    assertUnit(moves.size() == 2);
-
-   Move advanceOne(
-      Position(2, 6),   // from c7
-      Position(2, 5),   // to   c6
-      SPACE,            // no capture
-      Move::MOVE,       // normal pawn move
-      false             // black to move
-   );
-   Move advanceTwo(
-      Position(2, 6),   // from c7
-      Position(2, 4),   // to   c5
-      SPACE,
-      Move::MOVE,
-      false
-   );
-   assertUnit(moves.find(advanceOne) != moves.end());
-   assertUnit(moves.find(advanceTwo) != moves.end());
+   Move one(Position("c7"), Position("c6"), SPACE, Move::MOVE, false);
+   Move two(Position("c7"), Position("c5"), SPACE, Move::MOVE, false);
+   assertUnit(moves.count(one) == 1);
+   assertUnit(moves.count(two) == 1);
 
    // TEARDOWN
    board.board[2][6] = nullptr;
@@ -238,36 +191,21 @@ void TestPawn::getMoves_captureWhite()
    Pawn pawn(1, 5, true);            // b6
    board.board[1][5] = &pawn;
 
-   // Place opposing pawns to capture
-   Black blackA7(PAWN), blackB7(PAWN), blackC7(PAWN);
-   board.board[0][6] = &blackA7; // a7
-   board.board[1][6] = &blackB7; // b7 (blocks forward)
-   board.board[2][6] = &blackC7; // c7
+   Black a7(PAWN), b7(PAWN), c7(PAWN);
+   board.board[0][6] = &a7;  // a7
+   board.board[1][6] = &b7;  // b7 (blocks)
+   board.board[2][6] = &c7;  // c7
+   set<Move> moves;
 
    // EXERCISE
-   std::set<Move> moves;
    pawn.getMoves(moves, board);
 
    // VERIFY
-   // Only two captures (diagonals), no forward move
    assertUnit(moves.size() == 2);
-
-   Move captureA7(
-      Position(1, 5),   // from b6
-      Position(0, 6),   // to   a7
-      PAWN,             // capture pawn
-      Move::MOVE,       // normal move type
-      true              // white to move
-   );
-   Move captureC7(
-      Position(1, 5),   // from b6
-      Position(2, 6),   // to   c7
-      PAWN,
-      Move::MOVE,
-      true
-   );
-   assertUnit(moves.find(captureA7) != moves.end());
-   assertUnit(moves.find(captureC7) != moves.end());
+   Move ma(Position("b6"), Position("a7"), PAWN, Move::MOVE, true);
+   Move mc(Position("b6"), Position("c7"), PAWN, Move::MOVE, true);
+   assertUnit(moves.count(ma) == 1);
+   assertUnit(moves.count(mc) == 1);
 
    // TEARDOWN
    board.board[1][5] = nullptr;
@@ -298,39 +236,24 @@ void TestPawn::getMoves_captureBlack()
 {
    // SETUP
    BoardEmpty board;
-   Pawn pawn(1, 5, false);     // b6, black pawn
+   Pawn pawn(1, 5, false);     // b6
    board.board[1][5] = &pawn;
 
-   // Place opposing white pawns
-   White whiteA5(PAWN), whiteB5(PAWN), whiteC5(PAWN);
-   board.board[0][4] = &whiteA5; // a5
-   board.board[1][4] = &whiteB5; // b5 (blocks forward)
-   board.board[2][4] = &whiteC5; // c5
+   White a5(PAWN), b5(PAWN), c5(PAWN);
+   board.board[0][4] = &a5;  // a5
+   board.board[1][4] = &b5;  // b5 (blocks)
+   board.board[2][4] = &c5;  // c5
+   set<Move> moves;
 
    // EXERCISE
-   std::set<Move> moves;
    pawn.getMoves(moves, board);
 
    // VERIFY
-   // Only two captures (diagonals), no forward move
    assertUnit(moves.size() == 2);
-
-   Move captureA5(
-      Position(1, 5),   // from b6
-      Position(0, 4),   // to   a5
-      PAWN,             // captured pawn
-      Move::MOVE,       // normal move
-      false             // black to move
-   );
-   Move captureC5(
-      Position(1, 5),   // from b6
-      Position(2, 4),   // to   c5
-      PAWN,
-      Move::MOVE,
-      false
-   );
-   assertUnit(moves.find(captureA5) != moves.end());
-   assertUnit(moves.find(captureC5) != moves.end());
+   Move ma(Position("b6"), Position("a5"), PAWN, Move::MOVE, false);
+   Move mc(Position("b6"), Position("c5"), PAWN, Move::MOVE, false);
+   assertUnit(moves.count(ma) == 1);
+   assertUnit(moves.count(mc) == 1);
 
    // TEARDOWN
    board.board[1][5] = nullptr;
@@ -358,7 +281,42 @@ void TestPawn::getMoves_captureBlack()
  **************************************/
 void TestPawn::getMoves_enpassantWhite()
 {
-   assertUnit(NOT_YET_IMPLEMENTED);
+   // SETUP
+   BoardEmpty board;
+   // place our white pawn on b5
+   Pawn whiteB5(1, 4, true);
+   board.board[1][4] = &whiteB5;
+
+   // place an enemy pawn that moved from c7 to c5
+   Pawn blackC5(2, 4, false);
+   board.board[2][4] = &blackC5;
+
+   // block straight advance with a pawn on b6
+   Pawn blockerB6(1, 5, true);
+   board.board[1][5] = &blockerB6;
+
+   // simulate that blackC5 just made its two-step move on turn #1
+   board.setCurrentMove(1);
+   blackC5.setLastMove(board.getCurrentMove());
+
+   // now white to move on turn #2
+   board.setCurrentMove(2);
+   set<Move> moves;
+
+   // EXERCISE
+   whiteB5.getMoves(moves, board);
+
+   // VERIFY
+   // only one en-passant capture: b5 to c6
+   assertUnit(moves.size() == 1);
+
+   Move ep(Position("b5"), Position("c6"), PAWN, Move::ENPASSANT, true);
+   assertUnit(moves.count(ep) == 1);
+
+   // TEARDOWN
+   board.board[1][4] = nullptr;
+   board.board[2][4] = nullptr;
+   board.board[1][5] = nullptr;
 }
 
 
@@ -381,7 +339,40 @@ void TestPawn::getMoves_enpassantWhite()
  **************************************/
 void TestPawn::getMoves_enpassantBlack()
 {
-   assertUnit(NOT_YET_IMPLEMENTED);
+   // SETUP
+   BoardEmpty board;
+   Pawn blackF4(5, 3, false);
+   board.board[5][3] = &blackF4;
+
+   // place a white pawn on g4 that just came from g2 to g4
+   Pawn whiteG4(6, 3, true);
+   board.board[6][3] = &whiteG4;
+
+   // block straight advance with pawn on f3
+   Pawn blockerF3(5, 2, true);
+   board.board[5][2] = &blockerF3;
+
+   // simulate g2?g4 on turn #1
+   board.setCurrentMove(1);
+   whiteG4.setLastMove(board.getCurrentMove());
+
+   // now black to move on turn #2
+   board.setCurrentMove(2);
+   set<Move> moves;
+
+   // EXERCISE
+   blackF4.getMoves(moves, board);
+
+   // VERIFY
+   // only one en-passant capture: f4 to g3
+   assertUnit(moves.size() == 1);
+   Move ep(Position("f4"), Position("g3"), PAWN, Move::ENPASSANT, false);
+   assertUnit(moves.count(ep) == 1);
+
+   // TEARDOWN
+   board.board[5][3] = nullptr;
+   board.board[6][3] = nullptr;
+   board.board[5][2] = nullptr;
 }
 
 /*************************************
@@ -404,7 +395,40 @@ void TestPawn::getMoves_enpassantBlack()
  **************************************/
 void TestPawn::getMoves_promotionWhite()
 {
-   assertUnit(NOT_YET_IMPLEMENTED);
+   // SETUP
+   BoardEmpty board;
+   Pawn wp(1, 6, true);   // b7
+   board.board[1][6] = &wp;
+
+   // enemy pieces on a8, c8
+   Black enemyA8(ROOK); board.board[0][7] = &enemyA8;
+   Black enemyC8(ROOK); board.board[2][7] = &enemyC8;
+
+   // EXERCISE
+   set<Move> moves;
+   wp.getMoves(moves, board);
+
+   // VERIFY
+   assertUnit(moves.size() == 3);
+
+   // straight promotion
+   Move m1(Position("b7"), Position("b8"), SPACE, Move::MOVE, true);
+   m1.setPromote(QUEEN);
+   // left capture promotion
+   Move m2(Position("b7"), Position("a8"), ROOK, Move::MOVE, true);
+   m2.setPromote(QUEEN);
+   // right capture promotion
+   Move m3(Position("b7"), Position("c8"), ROOK, Move::MOVE, true);
+   m3.setPromote(QUEEN);
+
+   assertUnit(moves.count(m1) == 1);
+   assertUnit(moves.count(m2) == 1);
+   assertUnit(moves.count(m3) == 1);
+
+   // TEARDOWN
+   board.board[1][6] = nullptr;
+   board.board[0][7] = nullptr;
+   board.board[2][7] = nullptr;
 }
 
 
@@ -428,7 +452,37 @@ void TestPawn::getMoves_promotionWhite()
  **************************************/
 void TestPawn::getMoves_promotionBlack()
 {
-   assertUnit(NOT_YET_IMPLEMENTED);
+   // SETUP
+   BoardEmpty board;
+   Pawn bp(4, 1, false);   // e2
+   board.board[4][1] = &bp;
+
+   // enemy rooks on d1, f1
+   White enemyD1(ROOK); board.board[3][0] = &enemyD1;
+   White enemyF1(ROOK); board.board[5][0] = &enemyF1;
+   set<Move> moves;
+
+   // EXERCISE
+   bp.getMoves(moves, board);
+
+   // VERIFY
+   assertUnit(moves.size() == 3);
+
+   Move m1(Position("e2"), Position("e1"), SPACE, Move::MOVE, false);
+   m1.setPromote(QUEEN);
+   Move m2(Position("e2"), Position("d1"), ROOK, Move::MOVE, false);
+   m2.setPromote(QUEEN);
+   Move m3(Position("e2"), Position("f1"), ROOK, Move::MOVE, false);
+   m3.setPromote(QUEEN);
+
+   assertUnit(moves.count(m1) == 1);
+   assertUnit(moves.count(m2) == 1);
+   assertUnit(moves.count(m3) == 1);
+
+   // TEARDOWN
+   board.board[4][1] = nullptr;
+   board.board[3][0] = nullptr;
+   board.board[5][0] = nullptr;
 }
 
 
@@ -439,6 +493,14 @@ void TestPawn::getMoves_promotionBlack()
  **************************************/
 void TestPawn::getType()
 {
-   assertUnit(NOT_YET_IMPLEMENTED);
-}
+   // SETUP
+   Pawn pawn(0, 0, true);
 
+   // EXERCISE
+   PieceType pt = pawn.getType();
+
+   // VERIFY
+   assertUnit(pt == PAWN);
+
+   // TEARDOWN
+}

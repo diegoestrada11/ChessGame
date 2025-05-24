@@ -13,6 +13,7 @@
 #include "piece.h"
 #include "pieceSpace.h"
 #include "pieceKnight.h"
+#include "pieceQueen.h"
 #include <cassert>
 using namespace std;
 
@@ -162,23 +163,58 @@ void Board::move(const Move& move)
    int dc = dst.getCol(), dr = dst.getRow();
 
    Piece* p = board[sc][sr];
-   if (!p)
-      return;   
+   if (!p) return;
 
-   // only delete a captured piece if it is *not* a PieceSpy
+   // 1) Handle castling first
+   if (move.getCastleKing() || move.getCastleQueen())
+   {
+      // move the king
+      board[dc][dr] = p;
+      board[sc][sr] = new Space(sc, sr);
+
+      // pick up the rook as well
+      int rookSrc = move.getCastleKing() ? 7 : 0;
+      int rookDst = move.getCastleKing() ? 5 : 3;
+      Piece* rook = board[rookSrc][sr];
+      board[rookDst][sr] = rook;
+      board[rookSrc][sr] = new Space(rookSrc, sr);
+
+      // stamp lastMove on both
+      p->setLastMove(numMoves);
+      rook->setLastMove(numMoves);
+      return;
+   }
+
+   // 2) Handle pawn?promotion (pawn arrives on the far rank)
+   if (p->getType() == PAWN && ((p->isWhite() && dr == 7) || (!p->isWhite() && dr == 0)))
+   {
+      // delete whatever was on dst (capture)
+      if (move.getCapture() != SPACE)
+         if (dynamic_cast<PieceSpy*>(board[dc][dr]) == nullptr)
+            delete board[dc][dr];
+
+      // delete the pawn from the source
+      delete p;
+
+      // drop in a brand new Queen
+      board[dc][dr] = new Queen(dc, dr, move.getWhiteMove());
+      board[sc][sr] = new Space(sc, sr);
+      return;
+   }
+
+   // 3) Ordinary capture (non?promotion)
    if (move.getCapture() != SPACE)
    {
-      // if this is not a spy, delete it; spies should stay alive
       if (dynamic_cast<PieceSpy*>(board[dc][dr]) == nullptr)
          delete board[dc][dr];
    }
 
+   // 4) Normal single?piece move
    board[dc][dr] = p;
-
    board[sc][sr] = new Space(sc, sr);
 
+   // record its new last?move
    p->setLastMove(numMoves);
-
 }
 
 /**********************************************
