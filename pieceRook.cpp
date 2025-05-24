@@ -24,8 +24,13 @@ static constexpr Delta ROOK_DIRS[4] = {
  ***************************************************/
 void Rook::display(ogstream* pgout) const
 {
-   if (!pgout || !position.isValid()) return;
-   pgout->drawRook(position, isWhite());
+   if (!pgout)
+      return;
+
+   if (!position.isValid())
+      return;
+
+   pgout->drawRook(position, !fWhite);
 }
 
 /**********************************************

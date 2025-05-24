@@ -28,8 +28,7 @@ void Bishop::display(ogstream* pgout) const
    if (!position.isValid())
       return;
 
-   pgout->drawBishop(position, isWhite());
-
+   pgout->drawBishop(position, !fWhite);
 }
 
 /**********************************************

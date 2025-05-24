@@ -30,9 +30,7 @@ void Knight::display(ogstream* pgout) const
 
    if (!position.isValid())
       return;
-
-   pgout->drawKnight(position, isWhite());
-
+   pgout->drawKnight(position, !fWhite);
 }
 
 /**********************************************

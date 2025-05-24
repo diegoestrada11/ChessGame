@@ -1182,9 +1182,6 @@ void TestBoard::move_kingLongCastle()
    delete board.board[0][0];
 }
 
-
-
-
 /******************************************************** 
  *        +---a-b-c-d-e-f-g-h---+
  *        |                     |
@@ -1201,44 +1198,44 @@ void TestBoard::move_kingLongCastle()
  ********************************************************/
 void TestBoard::construct_default()
 {
-   // SETUP
-   // EXERCISE
-   Board board;  // calls reset()
+   // SETUP / EXERCISE
+   Board board;   // calls reset()
 
-   //VERIFY
-   // move counter
+   // VERIFY
    assertUnit(board.numMoves == 0);
 
-   // white knights
-   const Piece& w1 = *board.board[1][0];
-   assertUnit(w1.getType() == KNIGHT);
-   assertUnit(w1.isWhite());
+   // White back rank (row 0)
+   assertUnit(board.board[0][0]->getType() == ROOK && board.board[0][0]->isWhite());
+   assertUnit(board.board[1][0]->getType() == KNIGHT && board.board[1][0]->isWhite());
+   assertUnit(board.board[2][0]->getType() == BISHOP && board.board[2][0]->isWhite());
+   assertUnit(board.board[3][0]->getType() == QUEEN && board.board[3][0]->isWhite());
+   assertUnit(board.board[4][0]->getType() == KING && board.board[4][0]->isWhite());
+   assertUnit(board.board[5][0]->getType() == BISHOP && board.board[5][0]->isWhite());
+   assertUnit(board.board[6][0]->getType() == KNIGHT && board.board[6][0]->isWhite());
+   assertUnit(board.board[7][0]->getType() == ROOK && board.board[7][0]->isWhite());
 
-   const Piece& w2 = *board.board[6][0];
-   assertUnit(w2.getType() == KNIGHT);
-   assertUnit(w2.isWhite());
-
-   // black knights
-   const Piece& b1 = *board.board[1][7];
-   assertUnit(b1.getType() == KNIGHT);
-   assertUnit(!b1.isWhite());
-
-   const Piece& b2 = *board.board[6][7];
-   assertUnit(b2.getType() == KNIGHT);
-   assertUnit(!b2.isWhite());
-
-   // all other squares should be nullptr (no pieces)
+   // White pawn rank (row 1)
    for (int c = 0; c < 8; ++c)
-      for (int r = 0; r < 8; ++r)
-      {
-         // skip the four knight spots
-         if ((c == 1 && r == 0) ||
-            (c == 6 && r == 0) ||
-            (c == 1 && r == 7) ||
-            (c == 6 && r == 7))
-            continue;
+      assertUnit(board.board[c][1]->getType() == PAWN && board.board[c][1]->isWhite());
+
+   // Empty middle ranks (rows 2–5)
+   for (int r = 2; r <= 5; ++r)
+      for (int c = 0; c < 8; ++c)
          assertUnit(board.board[c][r] == nullptr);
-      }
+
+   // Black pawn rank (row 6)
+   for (int c = 0; c < 8; ++c)
+      assertUnit(board.board[c][6]->getType() == PAWN && !board.board[c][6]->isWhite());
+
+   // Black back rank (row 7)
+   assertUnit(board.board[0][7]->getType() == ROOK && !board.board[0][7]->isWhite());
+   assertUnit(board.board[1][7]->getType() == KNIGHT && !board.board[1][7]->isWhite());
+   assertUnit(board.board[2][7]->getType() == BISHOP && !board.board[2][7]->isWhite());
+   assertUnit(board.board[3][7]->getType() == QUEEN && !board.board[3][7]->isWhite());
+   assertUnit(board.board[4][7]->getType() == KING && !board.board[4][7]->isWhite());
+   assertUnit(board.board[5][7]->getType() == BISHOP && !board.board[5][7]->isWhite());
+   assertUnit(board.board[6][7]->getType() == KNIGHT && !board.board[6][7]->isWhite());
+   assertUnit(board.board[7][7]->getType() == ROOK && !board.board[7][7]->isWhite());
 } // TEARDOWN
 
 

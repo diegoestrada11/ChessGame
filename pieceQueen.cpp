@@ -17,6 +17,11 @@
 ***************************************************/
 void Queen::display(ogstream* pgout) const
 {
+   if (!pgout)
+      return;
+
+   if (!position.isValid())
+      return;
    pgout->drawQueen(position, !fWhite);
 }
 

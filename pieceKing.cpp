@@ -23,6 +23,11 @@ King::King(int c, int r, bool isWhite)
  ***************************************************/
 void King::display(ogstream* pgout) const
 {
+   if (!pgout)
+      return;
+
+   if (!position.isValid())
+      return;
    pgout->drawKing(position, !fWhite);
 }
 

@@ -17,6 +17,11 @@
  ***************************************************/
 void Pawn::display(ogstream* pgout) const
 {
+   if (!pgout)
+      return;
+
+   if (!position.isValid())
+      return;
    pgout->drawPawn(position, !fWhite);
 }
 
