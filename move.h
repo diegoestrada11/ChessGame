@@ -33,27 +33,52 @@ public:
    friend TestKnight;
 
    // constructor
-   Move();
-   Move(const Position& from, const Position& to, PieceType capture = SPACE,
-      MoveType mt = MOVE, bool whiteToMove = true);
+   Move(Position from,
+      Position to,
+      PieceType capture = SPACE,
+      MoveType  mt = MOVE,
+      bool      whiteToMove = true);
 
-   explicit Move(const string& notation);
+   Move() : Move(INVALID, INVALID) {}
+   explicit Move(string s) : Move() { read(s); text = s; }
+   explicit Move(const char* s) : Move(string(s)) {}
 
+   // compiler-generated copy, operator=, dtor are fine
+   ~Move() = default;
+   Move(const Move&) = default;
+   Move& operator=(const Move&) = default;
+
+   string getText()       const { return text; }
    Position getSource()   const { return source; }
    Position getDest()     const { return dest; }
+   Position getProm()     const { return promote; } 
    PieceType getCapture()  const { return capture; }
    Move::MoveType getMoveType() const { return moveType; }
-   bool isWhiteMove() const { return isWhite; }
-   string getText()     const { return text; }
-   bool operator<(const Move& rhs) const;
-   bool operator==(const Move& rhs) const;
+   bool getWhiteMove() const { return isWhite; }
+   bool getEnPassant() const { return moveType == ENPASSANT; }
+   bool getCastleKing() const { return moveType == CASTLE_KING; }
+   bool getCastleQueen() const { return moveType == CASTLE_QUEEN; }
+   bool operator < (const Move& rhs) const;
+   bool operator == (const Move& rhs) const;
+   bool operator == (const string& rhs) const { return getText() == rhs; }
+   bool operator != (const string& rhs) const { return getText() != rhs; }
+   bool operator != (const Move& rhs) const { return !(*this == rhs); }
+
    void read(const string& rhs);
 
-   void setSource(const Position& source) { this->source = source; }
-   void setDest(const Position& dest) { this->dest = dest; }
-   void setCapture(PieceType capture) { this->capture = capture; }
-   void setPromote(PieceType promote) { this->promote = promote; }
-   void setMoveType(MoveType moveType) { this->moveType = moveType; }
+   void update() { text = getText(); }
+   void setCapture(PieceType pt) { capture = pt; update(); }
+   void setWhiteMove(bool white) { isWhite = white; update(); }
+   void setSource(const Position& src) { source = src; update(); }
+   void setDest(const Position& des) { dest = des; update();}
+   void setEnPassant() { moveType = ENPASSANT; }
+   void setPromote(PieceType pt) { promote = pt; update(); }
+   void setCastle(bool isKing)
+   {
+      moveType = isKing ? CASTLE_KING : CASTLE_QUEEN;
+      update();
+   }
+   void setMoveType(MoveType mt) { moveType = mt; update(); }
 
 
 private:

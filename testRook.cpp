@@ -13,7 +13,6 @@
 #include "uiDraw.h"
 #include <cassert>      
 
-
 /*************************************
  * +---a-b-c-d-e-f-g-h---+
  * |                     |
@@ -32,17 +31,22 @@ void TestRook::getMoves_blocked()
 {
    // SETUP
    BoardEmpty board;
+   Rook rook(2, 1, true);          // c2
+   board.board[2][1] = &rook;      // col=2, row=1
 
-   Rook rook(2, 1, true); // c2, white rook
-   board.board[2][1] = &rook;
+   White left(PAWN);
+   board.board[1][1] = &left;      // b2
 
-   White white(PAWN);
-   board.board[1][1] = &white;  // b2 left
-   board.board[2][0] = &white;  // c1 down
-   board.board[2][2] = &white;  // c3 up
-   board.board[3][1] = &white;  // d2 right
+   White down(PAWN);
+   board.board[2][0] = &down;      // c1
 
-   std::set<Move> moves;
+   White up(PAWN);
+   board.board[2][2] = &up;        // c3
+
+   White right(PAWN);
+   board.board[3][1] = &right;     // d2
+
+   set<Move> moves;
 
    // EXERCISE
    rook.getMoves(moves, board);
@@ -76,10 +80,8 @@ void TestRook::getMoves_slideToEnd()
 {
    // SETUP
    BoardEmpty board;
-   Rook rook(7, 7, true /*white*/); // temp values
-   rook.position.set(1, 1); // b2
-   board.board[1][1] = &rook;
-
+   Rook rook(2, 1, true);         // c2
+   board.board[1][2] = &rook;
    set<Move> moves;
 
    // EXERCISE
@@ -88,8 +90,42 @@ void TestRook::getMoves_slideToEnd()
    // VERIFY
    assertUnit(moves.size() == 14);
 
+   // horizontal left
+   Move m1(Position("c2"), Position("b2"), SPACE, Move::MOVE, true);
+   Move m2(Position("c2"), Position("a2"), SPACE, Move::MOVE, true);
+   // horizontal right
+   Move m3(Position("c2"), Position("d2"), SPACE, Move::MOVE, true);
+   Move m4(Position("c2"), Position("e2"), SPACE, Move::MOVE, true);
+   Move m5(Position("c2"), Position("f2"), SPACE, Move::MOVE, true);
+   Move m6(Position("c2"), Position("g2"), SPACE, Move::MOVE, true);
+   Move m7(Position("c2"), Position("h2"), SPACE, Move::MOVE, true);
+   // vertical up
+   Move m8(Position("c2"), Position("c3"), SPACE, Move::MOVE, true);
+   Move m9(Position("c2"), Position("c4"), SPACE, Move::MOVE, true);
+   Move m10(Position("c2"), Position("c5"), SPACE, Move::MOVE, true);
+   Move m11(Position("c2"), Position("c6"), SPACE, Move::MOVE, true);
+   Move m12(Position("c2"), Position("c7"), SPACE, Move::MOVE, true);
+   Move m13(Position("c2"), Position("c8"), SPACE, Move::MOVE, true);
+   // vertical down
+   Move m14(Position("c2"), Position("c1"), SPACE, Move::MOVE, true);
+
+   assertUnit(moves.find(m1) != moves.end());
+   assertUnit(moves.find(m2) != moves.end());
+   assertUnit(moves.find(m3) != moves.end());
+   assertUnit(moves.find(m4) != moves.end());
+   assertUnit(moves.find(m5) != moves.end());
+   assertUnit(moves.find(m6) != moves.end());
+   assertUnit(moves.find(m7) != moves.end());
+   assertUnit(moves.find(m8) != moves.end());
+   assertUnit(moves.find(m9) != moves.end());
+   assertUnit(moves.find(m10) != moves.end());
+   assertUnit(moves.find(m11) != moves.end());
+   assertUnit(moves.find(m12) != moves.end());
+   assertUnit(moves.find(m13) != moves.end());
+   assertUnit(moves.find(m14) != moves.end());
+
    // TEARDOWN
-   board.board[1][1] = nullptr;
+   board.board[1][2] = nullptr;
 }
 
 /*************************************
@@ -108,21 +144,22 @@ void TestRook::getMoves_slideToEnd()
  **************************************/
 void TestRook::getMoves_slideToBlock()
 {
-   // SETUP
+   // SETUP: everything now board.board[col][row]
    BoardEmpty board;
-   Rook rook(7, 7, true /*white*/);
-   rook.position.set(1, 1); // b2
-   board.board[1][1] = &rook;
+   Rook rook(2, 1, true);          // c2
+   board.board[2][1] = &rook;      // col=2, row=1
 
-   White pawn1(PAWN);
-   White pawn2(PAWN);
-   White pawn3(PAWN);
-   White pawn4(PAWN);
+   White pLeft(PAWN);
+   board.board[0][1] = &pLeft;     // a2
 
-   board.board[1][7] = &pawn1;  // b8
-   board.board[1][0] = &pawn2;  // b1
-   board.board[0][1] = &pawn3;  // a2
-   board.board[7][1] = &pawn4;  // h2
+   White pDown(PAWN);
+   board.board[2][0] = &pDown;     // c1
+
+   White pUp(PAWN);
+   board.board[2][7] = &pUp;       // c8
+
+   White pRight(PAWN);
+   board.board[7][1] = &pRight;    // h2
 
    set<Move> moves;
 
@@ -130,14 +167,28 @@ void TestRook::getMoves_slideToBlock()
    rook.getMoves(moves, board);
 
    // VERIFY
-   assertUnit(moves.size() == 14);
+   assertUnit(moves.size() == 10);
+
+   // left
+   assertUnit(moves.count(Move(Position("c2"), Position("b2"), SPACE, Move::MOVE, true)));
+   // right until before h2
+   assertUnit(moves.count(Move(Position("c2"), Position("d2"), SPACE, Move::MOVE, true)));
+   assertUnit(moves.count(Move(Position("c2"), Position("e2"), SPACE, Move::MOVE, true)));
+   assertUnit(moves.count(Move(Position("c2"), Position("f2"), SPACE, Move::MOVE, true)));
+   assertUnit(moves.count(Move(Position("c2"), Position("g2"), SPACE, Move::MOVE, true)));
+   // up until before c8
+   assertUnit(moves.count(Move(Position("c2"), Position("c3"), SPACE, Move::MOVE, true)));
+   assertUnit(moves.count(Move(Position("c2"), Position("c4"), SPACE, Move::MOVE, true)));
+   assertUnit(moves.count(Move(Position("c2"), Position("c5"), SPACE, Move::MOVE, true)));
+   assertUnit(moves.count(Move(Position("c2"), Position("c6"), SPACE, Move::MOVE, true)));
+   assertUnit(moves.count(Move(Position("c2"), Position("c7"), SPACE, Move::MOVE, true)));
 
    // TEARDOWN
-   board.board[1][1] = nullptr; // Rook
-   board.board[1][7] = nullptr; // Pawn b8
-   board.board[1][0] = nullptr; // Pawn b1
-   board.board[0][1] = nullptr; // Pawn a2
-   board.board[7][1] = nullptr; // Pawn h2
+   board.board[2][1] = nullptr;
+   board.board[0][1] = nullptr;
+   board.board[2][0] = nullptr;
+   board.board[2][7] = nullptr;
+   board.board[7][1] = nullptr;
 }
 
 /*************************************
@@ -158,20 +209,13 @@ void TestRook::getMoves_slideToCapture()
 {
    // SETUP
    BoardEmpty board;
-   Rook rook(7, 7, true /*white*/);
-   rook.position.set(1, 1); // b2
-   board.board[1][1] = &rook;
+   Rook rook(2, 1, true);         // c2
+   board.board[1][2] = &rook;
 
-   White pawn1(PAWN);
-   White pawn2(PAWN);
-   White pawn3(PAWN);
-   White pawn4(PAWN);
-
-   // Friendly pawns blocking rook's path — same color as rook
-   board.board[1][7] = &pawn1;  // b8
-   board.board[1][0] = &pawn2;  // b1
-   board.board[0][1] = &pawn3;  // a2
-   board.board[7][1] = &pawn4;  // h2
+   Black pLeft(PAWN);   board.board[1][0] = &pLeft;  // a2
+   Black pDown(PAWN);   board.board[0][2] = &pDown;  // c1
+   Black pUp(PAWN);     board.board[7][2] = &pUp;    // c8
+   Black pRight(PAWN);  board.board[1][7] = &pRight; // h2
 
    set<Move> moves;
 
@@ -181,12 +225,31 @@ void TestRook::getMoves_slideToCapture()
    // VERIFY
    assertUnit(moves.size() == 14);
 
+   // slides
+   assertUnit(moves.count(Move(Position("c2"), Position("b2"), SPACE, Move::MOVE, true)));
+   assertUnit(moves.count(Move(Position("c2"), Position("d2"), SPACE, Move::MOVE, true)));
+   assertUnit(moves.count(Move(Position("c2"), Position("e2"), SPACE, Move::MOVE, true)));
+   assertUnit(moves.count(Move(Position("c2"), Position("f2"), SPACE, Move::MOVE, true)));
+   assertUnit(moves.count(Move(Position("c2"), Position("g2"), SPACE, Move::MOVE, true)));
+   // captures
+   assertUnit(moves.count(Move(Position("c2"), Position("a2"), PAWN, Move::MOVE, true)));
+   assertUnit(moves.count(Move(Position("c2"), Position("h2"), PAWN, Move::MOVE, true)));
+   // vertical slides
+   assertUnit(moves.count(Move(Position("c2"), Position("c3"), SPACE, Move::MOVE, true)));
+   assertUnit(moves.count(Move(Position("c2"), Position("c4"), SPACE, Move::MOVE, true)));
+   assertUnit(moves.count(Move(Position("c2"), Position("c5"), SPACE, Move::MOVE, true)));
+   assertUnit(moves.count(Move(Position("c2"), Position("c6"), SPACE, Move::MOVE, true)));
+   assertUnit(moves.count(Move(Position("c2"), Position("c7"), SPACE, Move::MOVE, true)));
+   // captures
+   assertUnit(moves.count(Move(Position("c2"), Position("c1"), PAWN, Move::MOVE, true)));
+   assertUnit(moves.count(Move(Position("c2"), Position("c8"), PAWN, Move::MOVE, true)));
+
    // TEARDOWN
-   board.board[1][1] = nullptr; // Rook
-   board.board[1][7] = nullptr; // Pawn b8
-   board.board[1][0] = nullptr; // Pawn b1
-   board.board[0][1] = nullptr; // Pawn a2
-   board.board[7][1] = nullptr; // Pawn h2
+   board.board[1][2] = nullptr;
+   board.board[1][0] = nullptr;
+   board.board[0][2] = nullptr;
+   board.board[7][2] = nullptr;
+   board.board[1][7] = nullptr;
 }
 
 /*************************************
@@ -196,6 +259,14 @@ void TestRook::getMoves_slideToCapture()
  **************************************/
 void TestRook::getType()
 {
-   Rook rook(0, 0, true);
-   assertUnit(rook.getType() == ROOK);
+   // SETUP
+   Rook rook(2, 1, true);
+
+   // EXERCISE
+   PieceType pt = rook.getType();
+
+   // VERIFY
+   assertUnit(pt == ROOK);
+
+   // TEARDOWN
 }

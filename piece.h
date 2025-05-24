@@ -2,7 +2,7 @@
  * Header File:
  *    PIECE
  * Author:
-*    <your name here>
+*    Natalia Navarrete, Diego Estrada
  * Summary:
  *    The Piece base class and all the derived classes:
  *       SPACE, KING, QUEEN, ROOK, KNIGHT, BISHOP, PAWN
@@ -51,30 +51,31 @@ public:
    friend TestBoard;
 
    // constructors and stuff
-   Piece(const Position& pos, bool isWhite = true) {}
-   Piece(int c, int r, bool isWhite = true){}
-   Piece(const Piece& piece) {}
+   Piece(const Position& pos, bool isWhite = true) : 
+      fWhite(isWhite), nMoves(0), position(pos), lastMove(-1) {}
+   Piece(int c, int r, bool isWhite = true) :
+      fWhite(isWhite), nMoves(0), position(c, r), lastMove(-1) {}
+   Piece(const Piece& piece) { *this = piece; }
    virtual ~Piece() {}
    virtual const Piece& operator = (const Piece& rhs);
 
    // getters
    virtual bool operator == (PieceType pt) const { return this->getType() == pt; }
    virtual bool operator != (PieceType pt) const { return this->getType() != pt; }
-   virtual bool isWhite()                  const;
-   virtual bool isMoved() const { return nMoves > 0; }
-   virtual int getNMoves() const { return nMoves; }
-   virtual void decrementNMoves() {}
-   virtual const Position& getPosition() const { return position; }
-   virtual bool justMoved(int currentMove) const;
-
-
+   virtual bool isWhite()                  const { return fWhite; }
+   virtual bool isMoved()                  const { return getNMoves() != 0; }
+   virtual int getNMoves()                 const { return nMoves; }
+   virtual void decrementNMoves()                { nMoves -= (nMoves > 1) ? 2 : 0; }
+   virtual const Position& getPosition()   const { return position; }
+   virtual bool justMoved(int currentMove) const 
+               { return (currentMove - 1 == lastMove); }
 
    // setter
-   virtual void setLastMove(int currentMove);
+   virtual void setLastMove(int currentMove) { lastMove = currentMove; nMoves++; }
 
    // overwritten by the various pieces
    virtual PieceType getType()                                    const = 0;
-   virtual void display(ogstream* pgout)                         const = 0;
+   virtual void display(ogstream* pgout)                          const = 0;
    virtual void getMoves(set <Move>& moves, const Board& board) const;
 
 protected:
@@ -93,13 +94,11 @@ class PieceDerived : public Piece
 {
 public:
    PieceDerived(const Position& pos, bool isWhite) : Piece(pos, isWhite) {}
-   PieceDerived(int c, int r, bool isWhite) : Piece(9, 9) {}
+   PieceDerived(int c, int r, bool isWhite) : Piece(c, r, isWhite) {}
    ~PieceDerived() {}
-   PieceType getType()            const { return SPACE; }
+   PieceType getType()            const override { return SPACE; }
    void display(ogstream* pgout)  const { assert(false); }
 };
-
-
 
 /***************************************************
  * PIECE DUMMY

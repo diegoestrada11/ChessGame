@@ -11,34 +11,15 @@
 #include <iostream>
 
  /******************************************
- * POSITION ISVALID
- * Check if the internal column-row is a
- * valid board coordinate.
- ******************************************/
-bool Position::isValid()   const
-{
-   unsigned col = (colRow >> 4) & 0x0F;
-   unsigned row = colRow & 0x0F;
-   return (col < 8 && row < 8);
-}
-
- /******************************************
  * POSITION SET
  * Set the internal column-row representation 
  * from separate column and row indices.
  ******************************************/
 void Position::set(int c, int r)
 {
-   uint8_t colRowNew;
-
-   if (c < 0 || c >= 8)
-      colRowNew = 0xFF;
-   else if (r < 0 || r >= 8)
-      colRowNew = uint8_t((c << 4) | 0x0F);
-   else
-      colRowNew = uint8_t(((c & 0x0F) << 4) | (r & 0x0F));
-
-   set(colRowNew);
+   set(0xff);
+   setRow(r);
+   setCol(c);
 }
 
 /******************************************
@@ -59,18 +40,13 @@ void Position::setBoardWidthHeight(int widthBoard, int heightBoard)
 ******************************************/
 const Position &Position::operator =  (const char* rhs)
 {
-   if (!rhs || strlen(rhs) != 2)
-   {
-      set(-1, -1);
-      return *this;
-   }
+   if (rhs == NULL)
+      set(0xff);
+   else if(rhs[0] < 'a' || rhs[0] > 'h' || rhs[1] < '1' || rhs[1] > '8')
+      set(0xff);
+   else
+      set(rhs[0] - 'a', rhs[1] - '1');
 
-   char cChar = tolower(rhs[0]);
-   char rChar = rhs[1];
-   int c = ('a' <= cChar && cChar <= 'h') ? cChar - 'a' : -1;
-   int r = ('1' <= rChar && rChar <= '8') ? rChar - '1' : -1;
-
-   set(c, r);
    return *this;
 }
 
@@ -80,8 +56,7 @@ const Position &Position::operator =  (const char* rhs)
 ******************************************/
 const Position& Position::operator =  (const Position& rhs)
 {
-   if (this != &rhs)
-      this->colRow = rhs.colRow;
+   set(rhs.colRow);
    return *this;
 }
 
@@ -92,14 +67,15 @@ const Position& Position::operator =  (const Position& rhs)
 ******************************************/
 const Position &Position::operator += (const Delta& rhs)
 {
+   //adjustRow(rhs.dRow);
+   //adjustCol(rhs.dCol);
+
    int c = getCol() + rhs.dCol;
    int r = getRow() + rhs.dRow;
-
    if (c < 0 || c >= 8 || r < 0 || r >= 8)
-      set(-1, -1);
+      set(0xff);
    else
       set(c, r);
-
    return *this;
 }
 
@@ -108,7 +84,10 @@ const Position &Position::operator += (const Delta& rhs)
  ******************************************/
 ostream & operator << (ostream & out, const Position & rhs)
 {
-   out << "error";
+   if (rhs.isValid())
+      out << (char)(rhs.getCol() + 'a') << (char)(rhs.getRow() + '1');
+   else
+      out << "error";
    return out;
 }
 
@@ -117,6 +96,16 @@ ostream & operator << (ostream & out, const Position & rhs)
  **************************************/
 istream & operator >> (istream & in,  Position & rhs)
 {
+   char text[3] = {};
+   in >> text[0] >> text[1];
+   if (in.fail())
+   {
+      in.clear();
+      in.ignore();
+      throw string("Error reading coordinates");
+   }
+   else
+      rhs = text;
    return in;   
 }
 

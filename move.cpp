@@ -18,42 +18,26 @@ using namespace std;
 /***************************************************
  * MOVE : DEFAULT CONSTRUCTOR
  ***************************************************/
-Move::Move()
-   : source(), dest(),
-   promote(SPACE), capture(SPACE),
-   moveType(MOVE), isWhite(true),
-   text()
+Move::Move(Position from,
+   Position to,
+   PieceType capture_,
+   MoveType  mt_,
+   bool      white_)
+   : source(from)
+   , dest(to)
+   , promote(SPACE)
+   , capture(capture_)
+   , moveType(mt_)
+   , isWhite(white_)
+   , text()
 {
-}
-
-Move::Move(const Position& from,
-   const Position& to,
-   PieceType capture,
-   MoveType mt,
-   bool white)
-   : source(from), dest(to),
-   promote(SPACE), capture(capture),
-   moveType(mt), isWhite(white),
-   text()
-{
-}
-
-Move::Move(const std::string& notation)
-   : Move()         
-{
-   read(notation);
-   text = notation;
 }
 
 /***************************************************
  * MOVE : DEFAULT CONSTRUCTOR
  ***************************************************/
-bool Move::operator<(const Move& rhs) const {
-   if (source != rhs.source)    return source < rhs.source;
-   if (dest != rhs.dest)        return dest < rhs.dest;
-   if (capture != rhs.capture)  return capture < rhs.capture;
-   if (moveType != rhs.moveType)return moveType < rhs.moveType;
-   return isWhite < rhs.isWhite;
+bool Move::operator < (const Move& rhs) const {
+   return dest.getLocation() < rhs.dest.getLocation();
 }
 
 bool Move::operator==(const Move& rhs) const {

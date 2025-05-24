@@ -2,7 +2,7 @@
  * Source File:
  *    ROOK
  * Author:
- *    Ethan Leishman, Noah McSheehy, Bro. Helfrich
+ *    Natalia Navarrete, Diego Estrada
  * Summary:
  *    The rook class
  ************************************************************************/
@@ -11,58 +11,56 @@
 #include "board.h"
 #include "uiDraw.h"    // for draw*()
 
+static constexpr Delta ROOK_DIRS[4] = {
+   { +1,  0 },  // right
+   { -1,  0 },  // left
+   {  0, +1 },  // up
+   {  0, -1 }   // down
+};
+
  /***************************************************
  * PIECE DRAW
  * Draw all the pieces.
  ***************************************************/
 void Rook::display(ogstream* pgout) const
 {
-   pgout->drawRook(position, !fWhite);
+   if (!pgout || !position.isValid()) return;
+   pgout->drawRook(position, isWhite());
 }
-
 
 /**********************************************
  * ROOK : GET POSITIONS
  *********************************************/
 void Rook::getMoves(set<Move>& moves, const Board& board) const
 {
-   // Horizontal and vertical directions
-   const int directions[4][2] = {
-      {0, 1},   // up
-      {0, -1},  // down
-      {1, 0},   // right
-      {-1, 0}   // left
-   };
+   Position src = position;
 
-   Position start = this->getPosition();
+   for (auto d : ROOK_DIRS) {
+      for (int step = 1; step < 8; ++step) {
+         Position dst(src.getCol() + d.dCol * step,
+            src.getRow() + d.dRow * step);
 
-   for (int d = 0; d < 4; ++d)
-   {
-      int dCol = directions[d][0];
-      int dRow = directions[d][1];
-
-      for (int i = 1; i < 8; ++i)
-      {
-         Position end(start.getCol() + dCol * i, start.getRow() + dRow * i);
-         if (!end.isValid())
+         if (!dst.isValid())
             break;
 
-         const Piece& p = board[end];
+         const Piece& occ = board[dst];
+         PieceType    pt = occ.getType();
 
-         if (p.getType() == SPACE)
-         {
-            moves.insert(Move(start, end, SPACE, Move::MOVE, isWhite()));
+         // empty square? slide into it
+         if (pt == SPACE) {
+            moves.insert(Move(src, dst, SPACE, Move::MOVE, isWhite()));
+            continue;
          }
-         else if (p.isWhite() != this->isWhite())
-         {
-            moves.insert(Move(start, end, p.getType(), Move::MOVE, isWhite()));
-            break;
+
+         // occupied: enemy? capture and stop
+         if (occ.isWhite() != isWhite()) {
+            moves.insert(Move(src, dst, pt, Move::MOVE, isWhite()));
          }
-         else
-         {
-            break;
-         }
+
+         // either way (enemy or friend) we can't go further
+         break;
       }
    }
+   
 }
 

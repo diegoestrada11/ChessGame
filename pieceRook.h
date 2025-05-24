@@ -2,26 +2,25 @@
  * Header File:
  *    ROOK
  * Author:
-*    Ethan Leishman, Noah McSheehy
+*    Natalia Navarrete, Diego Estrada
  * Summary:
  *    The ROOK class
  ************************************************************************/
 
 #pragma once
-
 #include "piece.h"
 
  /***************************************************
   * ROOK
   * The rook, aka the "Tower"
   ***************************************************/
-class Rook : public Piece
-{
+class Rook : public Piece {
 public:
-   Rook(const Position& pos, bool isWhite) : Piece(pos, isWhite) {}
    Rook(int c, int r, bool isWhite) : Piece(c, r, isWhite) {}
-   ~Rook() {}
-   PieceType getType()            const { return ROOK; }
-   void getMoves(set <Move>& moves, const Board& board) const;
-   void display(ogstream* pgout)  const;
+   Rook(const Position& pos, bool w) : Piece(pos, w) {}
+   ~Rook() override {}
+
+   PieceType getType() const override { return ROOK; }
+   void       display(ogstream* pgout) const override;
+   void       getMoves(std::set<Move>& moves, const Board& board) const override;
 };
