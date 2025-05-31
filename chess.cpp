@@ -1,4 +1,4 @@
-/**********************************************************************
+Ôªø/**********************************************************************
 * Source File:
 *    Lab 04: Chess
 * Author:
@@ -28,74 +28,108 @@ using namespace std;
  * engine will wait until the proper amount of
  * time has passed and put the drawing on the screen.
  **************************************/
-void callBack(Interface *pUI, void * p)
+void callBack(Interface* pUI, void* p)
 {
    Board* pBoard = (Board*)p;
    Position posHover = pUI->getHoverPosition();
    Position posSelect = pUI->getSelectPosition();
 
-   // Remember previous valid click and current ìpicked upî piece
+   // Remember previous valid click and current ‚Äúpicked up‚Äù piece
    static Position prevSelect(-1, -1);
    static Position posSource(-1, -1);
+
+   // Track whether the game has ended (king captured) to stop further input
+   static bool isGameOver = false;
+
+   // If game is over, just redraw the board and return immediately
+   if (isGameOver)
+   {
+      pBoard->display(posHover, posSource);
+      return;
+   }
 
    // Process a click when the user has clicked a new valid square:
    if (posSelect.isValid() && posSelect != prevSelect)
    {
-      // No piece ìpicked upî yet. first click = pick up a piece
+      // CASE 1: No piece ‚Äúpicked up‚Äù yet. first click = pick up a piece
       if (posSource.isInvalid())
       {
          const Piece& clickedPiece = (*pBoard)[posSelect];
          if (clickedPiece.getType() != SPACE)
          {
-            // Store this as our ìpicked upî piece
+            // Store this as our ‚Äúpicked up‚Äù piece
             posSource = posSelect;
          }
-         // Drop the UIís selection immediately
+         // Drop the UI‚Äôs selection immediately
          // so next frame posSelect will be invalid
          pUI->clearSelectPosition();
       }
-      // CASE 2: We already have posSource to second click = drop or cancel
+      // CASE 2: posSource is valid, so second click = drop or cancel
       else
       {
-         // If they clicked the same square again, that means ìcancel pickup.î
+         // If they clicked the same square again, that means ‚Äúcancel pickup.‚Äù
          if (posSelect == posSource)
          {
             posSource = Position(-1, -1);
          }
-         // Otherwise, attempt to move from posSource ? posSelect
+         // Otherwise, attempt to move from posSource ‚Üí posSelect
          else
          {
             const Piece& sourcePiece = (*pBoard)[posSource];
             // Gather all legal moves for that piece
-            set<Move> legalMoves;
+            std::set<Move> legalMoves;
             sourcePiece.getMoves(legalMoves, *pBoard);
 
             bool didMove = false;
             for (const Move& m : legalMoves)
             {
-               // Only execute a move if it exactly matches our (source to destination)
+               // Only execute a move if it matches our (source to destination)
                if (m.getSource() == posSource && m.getDest() == posSelect)
                {
-                  pBoard->move(m);   // update the board
+                  // Before actually moving, record what piece (if any) is being captured
+                  PieceType captured = m.getCapture();
+
+                  // Execute the move
+                  pBoard->move(m);
                   didMove = true;
+
+                  // -------------------------------------------
+                  // KING‚ÄêCAPTURE CHECK: if we captured a KING ‚Üí game over
+                  // -------------------------------------------
+                  if (captured == KING)
+                  {
+                     // Print the victory message to the screen via ogstream
+                     ogstream* pout = pBoard->getOgstream();
+                     if (pout)
+                     {
+                        // Determine who just won: if sourcePiece was white, white captured black king
+                        if (sourcePiece.isWhite())
+                           *pout << Position(3, 4) << "White wins by capturing the King!";
+                        else
+                           *pout << Position(3, 4) << "Black wins by capturing the King!";
+                     }
+                     isGameOver = true;
+                  }
+                  // -------------------------------------------
+
                   break;
                }
             }
 
-            // Regardless of whether we moved or not, clear out posSource so we start fresh
+            // Clear out posSource so we start fresh on the next click
             posSource = Position(-1, -1);
          }
-         // Immediately drop the UIís select so that posSelect becomes invalid next frame
+         // Immediately drop the UI‚Äôs select so that posSelect becomes invalid next frame
          pUI->clearSelectPosition();
       }
 
-      // update prevSelect = posSelect so that repeating the same square does not retrigger.
+      // Update prevSelect so repeated clicking the same square won‚Äôt retrigger
       prevSelect = posSelect;
    }
 
+   // Always redraw the board (with any highlights or final state)
    pBoard->display(posHover, posSource);
 }
-
 
 /*********************************
  * MAIN - Where it all begins...

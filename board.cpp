@@ -283,7 +283,13 @@ BoardEmpty::~BoardEmpty()
    delete pSpace;
 }
 
-
+/**********************************************
+ * BOARD : IS UNDER ATTACK
+ * Check if a position is under attack by a given color
+ * INPUT pos The position to check
+ * byWhite True if we are checking for white, false for black
+ * OUTPUT True if the position is under attack, false otherwise
+ *********************************************/
 bool Board::isUnderAttack(const Position& pos, bool byWhite) const
 {
    for (int c = 0; c < 8; ++c)
@@ -305,3 +311,4 @@ bool Board::isUnderAttack(const Position& pos, bool byWhite) const
    }
    return false;
 }
+

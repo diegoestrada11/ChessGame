@@ -11,7 +11,7 @@
 
 #include <stack>
 #include <cassert>
-#include "move.h"   // Because we return a set of Move
+#include "move.h" 
 
 class ogstream;
 class TestPawn;
@@ -48,11 +48,18 @@ public:
 
    // getters
    virtual int  getCurrentMove()const { return numMoves; }
-   virtual bool whiteTurn()     const { return (numMoves % 2 == 0);  }
+   virtual bool whiteTurn()     const { return (numMoves % 2 == 0); }
    virtual void display(const Position& posHover,
       const Position& posSelect) const;
    virtual const Piece& operator [] (const Position& pos) const;
    bool isUnderAttack(const Position& pos, bool byWhite) const;
+   ogstream* getOgstream() const { return pgout; }
+
+   virtual bool isCheckmate(bool white) const {
+      // Stub implementation – always returns false
+      return false;
+   }
+
    // setters
    virtual void free();
    virtual void reset(bool fFree = true);
@@ -61,8 +68,8 @@ public:
 
 protected:
    void  assertBoard() const;
-   
-   Piece * board[8][8];    // the board of chess pieces
+
+   Piece* board[8][8];    // the board of chess pieces
    int numMoves;
 
    ogstream* pgout;        // the graphics window
