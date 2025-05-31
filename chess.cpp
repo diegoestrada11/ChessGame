@@ -30,15 +30,70 @@ using namespace std;
  **************************************/
 void callBack(Interface *pUI, void * p)
 {
-   // the first step is to cast the void pointer into a game object. This
-   // is the first step of every single callback function in OpenGL. 
-   Board * pBoard = (Board *)p;
+   Board* pBoard = (Board*)p;
+   Position posHover = pUI->getHoverPosition();
+   Position posSelect = pUI->getSelectPosition();
 
-   Position hover = pUI->getHoverPosition();
-   Position select = pUI->getSelectPosition();
+   // Remember previous valid click and current “picked up” piece
+   static Position prevSelect(-1, -1);
+   static Position posSource(-1, -1);
 
-   pBoard->display(hover, select);
-   
+   // Process a click when the user has clicked a new valid square:
+   if (posSelect.isValid() && posSelect != prevSelect)
+   {
+      // No piece “picked up” yet. first click = pick up a piece
+      if (posSource.isInvalid())
+      {
+         const Piece& clickedPiece = (*pBoard)[posSelect];
+         if (clickedPiece.getType() != SPACE)
+         {
+            // Store this as our “picked up” piece
+            posSource = posSelect;
+         }
+         // Drop the UI’s selection immediately
+         // so next frame posSelect will be invalid
+         pUI->clearSelectPosition();
+      }
+      // CASE 2: We already have posSource to second click = drop or cancel
+      else
+      {
+         // If they clicked the same square again, that means “cancel pickup.”
+         if (posSelect == posSource)
+         {
+            posSource = Position(-1, -1);
+         }
+         // Otherwise, attempt to move from posSource ? posSelect
+         else
+         {
+            const Piece& sourcePiece = (*pBoard)[posSource];
+            // Gather all legal moves for that piece
+            set<Move> legalMoves;
+            sourcePiece.getMoves(legalMoves, *pBoard);
+
+            bool didMove = false;
+            for (const Move& m : legalMoves)
+            {
+               // Only execute a move if it exactly matches our (source to destination)
+               if (m.getSource() == posSource && m.getDest() == posSelect)
+               {
+                  pBoard->move(m);   // update the board
+                  didMove = true;
+                  break;
+               }
+            }
+
+            // Regardless of whether we moved or not, clear out posSource so we start fresh
+            posSource = Position(-1, -1);
+         }
+         // Immediately drop the UI’s select so that posSelect becomes invalid next frame
+         pUI->clearSelectPosition();
+      }
+
+      // update prevSelect = posSelect so that repeating the same square does not retrigger.
+      prevSelect = posSelect;
+   }
+
+   pBoard->display(posHover, posSource);
 }
 
 

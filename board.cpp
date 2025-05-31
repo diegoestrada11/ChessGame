@@ -221,6 +221,7 @@ void Board::move(const Move& move)
    {
       // move the king
       board[dc][dr] = p;
+      p->setPosition(dst);
       board[sc][sr] = new Space(sc, sr);
 
       // pick up the rook as well
@@ -228,6 +229,7 @@ void Board::move(const Move& move)
       int rookDst = move.getCastleKing() ? 5 : 3;
       Piece* rook = board[rookSrc][sr];
       board[rookDst][sr] = rook;
+      rook->setPosition(Position(rookDst, sr));
       board[rookSrc][sr] = new Space(rookSrc, sr);
 
       // stamp lastMove on both
@@ -262,6 +264,7 @@ void Board::move(const Move& move)
 
    // 4) Normal single?piece move
    board[dc][dr] = p;
+   p->setPosition(dst);
    board[sc][sr] = new Space(sc, sr);
 
    // record its new last?move

@@ -72,7 +72,7 @@ public:
 
    // setter
    virtual void setLastMove(int currentMove) { lastMove = currentMove; nMoves++; }
-
+   void setPosition(const Position& pos) { position = pos;}
    // overwritten by the various pieces
    virtual PieceType getType()                                    const = 0;
    virtual void display(ogstream* pgout)                          const = 0;
