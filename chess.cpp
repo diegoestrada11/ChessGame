@@ -37,7 +37,8 @@ void callBack(Interface *pUI, void * p)
    Position hover = pUI->getHoverPosition();
    Position select = pUI->getSelectPosition();
 
-   pBoard->display(Position(), Position());
+   pBoard->display(hover, select);
+   
 }
 
 

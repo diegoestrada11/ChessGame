@@ -131,7 +131,6 @@ void ogstream::drawLetter(const Position& topLeft, char letter) const
    glutBitmapCharacter(pFont, letter);
 }
 
-
 /************************************************************************
 * GL COLOR
 * Set the color on the board
@@ -533,6 +532,3 @@ void ogstream::drawPossible(const Position& pos)
    // finish the drawing
    glEnd();
 }
-
-
-

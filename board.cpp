@@ -103,19 +103,56 @@ Piece& Board::operator [] (const Position& pos)
  ***********************************************/
 void Board::display(const Position& posHover, const Position& posSelect) const
 {
-   // draw board
+   // draw empty checkboard background
    pgout->drawBoard();
 
    // draw every square’s piece (or a space):
    for (int c = 0; c < 8; ++c)
       for (int r = 0; r < 8; ++r)
       {
+         Position currentPos(c, r);
+         // highlight the selected square from mouse hovering 
+         if (currentPos == posHover)
+         {
+            pgout->drawHover(posHover);
+         }
+
+         // highlight the selected square from mouse clicking
+         if (currentPos == posSelect)
+         {
+            pgout->drawSelected(posSelect);
+         }
+
          Piece* p = board[c][r];
          if (p)
             p->display(pgout);
          else
             space.display(pgout);
       }
+
+
+   if (posSelect.isValid())
+   {
+      int sc = posSelect.getCol();
+      int sr = posSelect.getRow();
+
+      Piece* selectedPiece = board[sc][sr];
+      
+      // Only if there really is a non-Space piece at posSelect
+      if (selectedPiece != nullptr && dynamic_cast<Space*>(selectedPiece) == nullptr)
+      {
+         // Let the piece fill allMoves with every legal Move
+         set<Move> allMoves;
+         selectedPiece->getMoves(allMoves, *this);
+
+         // For each legal move, highlight the destination square
+         for (const Move& m : allMoves)
+         {
+            Position dest = m.getDest();
+            pgout->drawPossible(dest);
+         }
+      }
+   }
 }
 
 /************************************************
